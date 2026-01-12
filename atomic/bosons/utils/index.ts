@@ -1,1 +1,3 @@
-export * from './api'
+export * from './load_doc'
+export * from './use_documentation'
+

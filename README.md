@@ -1,6 +1,32 @@
 # <img src="https://nucleify.io/favicon.ico" width="17" height="17" /> &nbsp; nuc_documentation
 
-Module that contains documentation functions.
+Module that provides Markdown-based documentation pages.
+
+## Features
+
+- **File-based content** - Documentation is stored in `.md` files
+- **Sidebar navigation** - Organized by categories and pages
+- **Markdown rendering** - Full markdown support with syntax highlighting
+- **Responsive design** - Works on desktop and mobile
+
+## Structure
+
+```
+content/
+├── introduction.md
+├── installation.md
+├── quick-start.md
+├── modules.md
+├── atomic-design.md
+├── configuration.md
+├── atoms.md
+├── molecules.md
+└── organisms.md
+```
+
+## Usage
+
+Add new documentation by creating `.md` files in the `content/` folder and registering them in the `DOC_CATEGORIES` constant.
 
 <br>
 
