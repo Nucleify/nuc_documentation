@@ -10,7 +10,7 @@ Nucleify provides a comprehensive set of atomic components:
 
 Interactive button component with multiple variants.
 
-```vue
+```js
 <ad-button label="Click me" />
 <ad-button label="Primary" severity="primary" />
 <ad-button label="Disabled" disabled />

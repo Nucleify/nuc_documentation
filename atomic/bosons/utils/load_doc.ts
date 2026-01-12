@@ -4,17 +4,19 @@ import { apiHandle } from 'atomic'
 
 export async function loadDoc(
   slug: string,
+  category: string,
   onSuccess: (html: string) => void,
   onError?: () => void
 ): Promise<void> {
-  if (!slug) {
+  if (!slug || !category) {
     onError?.()
     return
   }
 
   try {
     await apiHandle<string>({
-      url: appUrl() + `/modules/nuc_documentation/content/${slug}.md`,
+      url:
+        appUrl() + `/modules/nuc_documentation/content/${category}/${slug}.md`,
       method: 'GET',
       onSuccess: async (data: string) => {
         const html = await marked.parse(data)
@@ -23,7 +25,7 @@ export async function loadDoc(
       },
     })
   } catch (error) {
-    console.error(`Error loading documentation for ${slug}:`, error)
+    console.error(`Error loading documentation for ${category}/${slug}:`, error)
     onError?.()
   }
 }

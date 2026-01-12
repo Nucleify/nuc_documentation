@@ -23,18 +23,11 @@
         </div>
       </aside>
 
-      <main class="documentation-content">
-        <div v-if="loading" class="content-loading">
-          <ad-progress-spinner />
-        </div>
-
-        <div v-else-if="!activePage" class="content-placeholder">
-          <h2>Welcome to Documentation</h2>
-          <p>Select a topic from the sidebar to get started.</p>
-        </div>
-
+      <main
+        v-if="!loading && activeContent"
+        class="documentation-content"
+      >
         <div
-          v-else
           v-sanitize-html="activeContent"
           class="doc-content"
         />
@@ -48,7 +41,12 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute } from 'nuxt/app'
+import { onMounted } from 'vue'
+
 import { useDocumentation } from 'atomic'
+
+const route = useRoute()
 
 const {
   categories,
@@ -58,13 +56,25 @@ const {
   setActivePage,
   prefetchAll,
   loadPage,
+  loadPageFromPath,
 } = useDocumentation()
 
 onMounted(async () => {
+  const path = route.path
+
+  if (path && path.startsWith('/docs/') && path !== '/docs') {
+    const loaded = await loadPageFromPath(path)
+    if (loaded) {
+      await prefetchAll()
+      return
+    }
+  }
+
   if (categories.value.length > 0 && categories.value[0].pages.length > 0) {
     const firstPage = categories.value[0].pages[0]
+    const category = categories.value[0].slug
 
-    await loadPage(firstPage.slug)
+    await loadPage(firstPage.slug, category)
 
     if (!activePage.value) {
       setActivePage(firstPage)

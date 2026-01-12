@@ -24,8 +24,9 @@ export interface UseDocumentationInterface {
   activePage: Ref<DocPageInterface | null>
   activeContent: Ref<string>
   loading: Ref<boolean>
-  loadPage: (slug: string) => Promise<void>
+  loadPage: (slug: string, category: string) => Promise<void>
   setActivePage: (page: DocPageInterface) => void
   prefetchAll: () => Promise<void>
   prefetchFirstPage: () => Promise<void>
+  loadPageFromPath: (path: string) => Promise<boolean>
 }
