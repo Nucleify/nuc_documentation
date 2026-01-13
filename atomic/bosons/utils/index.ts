@@ -1,3 +1,5 @@
 export * from './load_doc'
+export * from './slugify'
+export * from './parse_headings'
 export * from './use_documentation'
-
+export * from './use_headings'

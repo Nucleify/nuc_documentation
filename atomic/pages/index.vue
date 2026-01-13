@@ -2,36 +2,28 @@
   <div class="documentation-wrapper">
     <nuc-section-navbar />
     <div class="documentation-container">
-      <aside class="documentation-sidebar">
-        <div
-          v-for="category in categories"
-          :key="category.slug"
-          class="sidebar-category"
-        >
-          <h3 class="category-title">{{ category.name }}</h3>
-          <ul class="category-pages">
-            <li v-for="page in category.pages" :key="page.slug">
-              <a
-                class="page-link"
-                :class="{ active: activePage?.slug === page.slug }"
-                @click="setActivePage(page)"
-              >
-                {{ page.title }}
-              </a>
-            </li>
-          </ul>
-        </div>
-      </aside>
+      <nuc-documentation-sidebar
+        :categories="categories"
+        :active-page="activePage"
+        @page-click="setActivePage"
+      />
 
       <main
         v-if="!loading && activeContent"
         class="documentation-content"
       >
         <div
+          ref="contentRef"
           v-sanitize-html="activeContent"
           class="doc-content"
         />
       </main>
+
+      <nuc-documentation-toc
+        :headings="headings"
+        :active-heading-id="activeHeadingId"
+        @heading-click="scrollToHeading"
+      />
     </div>
 
     <div class="documentation-hexagons-container">
@@ -42,9 +34,14 @@
 
 <script setup lang="ts">
 import { useRoute } from 'nuxt/app'
-import { onMounted } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
-import { useDocumentation } from 'atomic'
+import {
+  NucDocumentationSidebar,
+  NucDocumentationToc,
+  useDocumentation,
+  useHeadings,
+} from 'atomic'
 
 const route = useRoute()
 
@@ -59,6 +56,25 @@ const {
   loadPageFromPath,
 } = useDocumentation()
 
+const contentRef = ref<HTMLElement | null>(null)
+const {
+  headings,
+  activeHeadingId,
+  updateHeadings,
+  scrollToHeading,
+  setupScrollTriggers,
+  cleanupScrollTriggers,
+} = useHeadings()
+
+watch(activeContent, () => {
+  nextTick(() => {
+    updateHeadings(activeContent.value)
+    nextTick(() => {
+      setupScrollTriggers(contentRef.value)
+    })
+  })
+})
+
 onMounted(async () => {
   const path = route.path
 
@@ -66,6 +82,16 @@ onMounted(async () => {
     const loaded = await loadPageFromPath(path)
     if (loaded) {
       await prefetchAll()
+      nextTick(() => {
+        updateHeadings(activeContent.value)
+        nextTick(() => {
+          setupScrollTriggers(contentRef.value)
+          if (window.location.hash) {
+            const id = window.location.hash.slice(1)
+            scrollToHeading(id)
+          }
+        })
+      })
       return
     }
   }
@@ -82,6 +108,21 @@ onMounted(async () => {
   }
 
   await prefetchAll()
+
+  nextTick(() => {
+    updateHeadings(activeContent.value)
+    nextTick(() => {
+      setupScrollTriggers(contentRef.value)
+      if (window.location.hash) {
+        const id = window.location.hash.slice(1)
+        scrollToHeading(id)
+      }
+    })
+  })
+})
+
+onUnmounted(() => {
+  cleanupScrollTriggers()
 })
 </script>
 

@@ -19,6 +19,13 @@ export interface DocContentInterface {
   content: string
 }
 
+export interface DocHeadingInterface {
+  id: string
+  text: string
+  level: number
+  children?: DocHeadingInterface[]
+}
+
 export interface UseDocumentationInterface {
   categories: Ref<DocCategoryInterface[]>
   activePage: Ref<DocPageInterface | null>

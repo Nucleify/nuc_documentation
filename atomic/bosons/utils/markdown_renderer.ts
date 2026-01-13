@@ -1,9 +1,19 @@
 import type { Tokens } from 'marked'
 import { marked } from 'marked'
 
+import { slugify } from '.'
+
 import hljs from 'highlight.js'
 
 const renderer = new marked.Renderer()
+
+renderer.heading = (token: Tokens.Heading) => {
+  const level = token.depth
+  const text = token.text
+  const id = slugify(text)
+  const tag = `h${level}`
+  return `<${tag} id="${id}">${text}</${tag}>`
+}
 
 renderer.code = (token: Tokens.Code) => {
   let highlightedCode = token.text
