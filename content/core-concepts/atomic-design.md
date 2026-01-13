@@ -34,7 +34,7 @@ The smallest visual components:
 - Labels
 - Icons
 
-```vue
+```html
 <template>
   <button :class="$style['ad-button']">
     <slot />

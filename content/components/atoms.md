@@ -10,7 +10,7 @@ Nucleify provides a comprehensive set of atomic components:
 
 Interactive button component with multiple variants.
 
-```js
+```html
 <ad-button label="Click me" />
 <ad-button label="Primary" severity="primary" />
 <ad-button label="Disabled" disabled />
@@ -20,7 +20,7 @@ Interactive button component with multiple variants.
 
 Text input field for user data entry.
 
-```vue
+```html
 <ad-input-text v-model="value" placeholder="Enter text" />
 ```
 
@@ -28,7 +28,7 @@ Text input field for user data entry.
 
 Boolean selection component.
 
-```vue
+```html
 <ad-checkbox v-model="checked" label="Accept terms" />
 ```
 
@@ -36,7 +36,7 @@ Boolean selection component.
 
 Display icons from the icon library.
 
-```vue
+```html
 <ad-icon icon="pi pi-check" />
 <ad-icon icon="pi pi-times" size="large" />
 ```
@@ -45,7 +45,7 @@ Display icons from the icon library.
 
 Small status indicator.
 
-```vue
+```html
 <ad-badge value="5" />
 <ad-badge value="New" severity="success" />
 ```
@@ -54,7 +54,7 @@ Small status indicator.
 
 Label for categorization.
 
-```vue
+```html
 <ad-tag value="Active" severity="success" />
 <ad-tag value="Pending" severity="warning" />
 ```
@@ -63,7 +63,7 @@ Label for categorization.
 
 Loading placeholder component.
 
-```vue
+```html
 <ad-skeleton width="100%" height="2rem" />
 ```
 
@@ -76,7 +76,7 @@ Each atom supports consistent styling through:
 - Size modifiers
 - Custom styles
 
-```vue
+```html
 <ad-button 
   label="Custom" 
   class="custom-button"

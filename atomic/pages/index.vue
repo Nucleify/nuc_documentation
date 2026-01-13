@@ -86,5 +86,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
+@import 'highlight.js/styles/github-dark.css';
 @import 'index';
 </style>

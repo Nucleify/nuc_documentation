@@ -8,7 +8,7 @@ Organisms are complex UI components composed of molecules and atoms, forming dis
 
 Powerful table for displaying and managing data.
 
-```vue
+```html
 <ad-data-table 
   :value="users" 
   :columns="columns"
@@ -21,7 +21,7 @@ Powerful table for displaying and managing data.
 
 Modal dialog for user interactions.
 
-```vue
+```html
 <ad-dialog 
   v-model:visible="showDialog" 
   header="Confirm Action"
@@ -34,7 +34,7 @@ Modal dialog for user interactions.
 
 Collapsible content sections.
 
-```vue
+```html
 <ad-accordion :panels="panels" />
 ```
 
@@ -42,7 +42,7 @@ Collapsible content sections.
 
 Dropdown menu for actions.
 
-```vue
+```html
 <ad-menu :model="menuItems" />
 ```
 
@@ -50,7 +50,7 @@ Dropdown menu for actions.
 
 Data visualization component.
 
-```vue
+```html
 <ad-chart 
   type="bar" 
   :data="chartData" 
@@ -62,7 +62,7 @@ Data visualization component.
 
 Container with header and content areas.
 
-```vue
+```html
 <ad-card>
   <template #header>Card Title</template>
   <template #content>
@@ -78,7 +78,7 @@ Container with header and content areas.
 
 Tabbed navigation for content organization.
 
-```vue
+```html
 <ad-tabs :tabs="tabs" />
 ```
 
@@ -86,7 +86,7 @@ Tabbed navigation for content organization.
 
 Organisms can contain other organisms:
 
-```vue
+```html
 <ad-card>
   <template #content>
     <ad-data-table :value="data" />

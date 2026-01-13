@@ -8,7 +8,7 @@ Molecules are combinations of atoms that form simple, functional components.
 
 Combines an input with an animated floating label.
 
-```vue
+```html
 <ad-float-label>
   <ad-input-text id="email" v-model="email" />
   <label for="email">Email</label>
@@ -19,7 +19,7 @@ Combines an input with an animated floating label.
 
 Enhanced link component with icon support.
 
-```vue
+```html
 <ad-anchor 
   href="/dashboard" 
   label="Dashboard"
@@ -31,7 +31,7 @@ Enhanced link component with icon support.
 
 Card-like container for content grouping.
 
-```vue
+```html
 <ad-tile>
   <template #header>Title</template>
   <template #content>Content goes here</template>
@@ -42,7 +42,7 @@ Card-like container for content grouping.
 
 Molecules combine atoms to create reusable patterns:
 
-```vue
+```html
 <template>
   <div class="form-field">
     <ad-label :for="id">{{ label }}</ad-label>

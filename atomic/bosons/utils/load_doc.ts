@@ -1,6 +1,6 @@
-import { marked } from 'marked'
-
 import { apiHandle } from 'atomic'
+
+import { marked } from './markdown_renderer'
 
 export async function loadDoc(
   slug: string,
