@@ -64,20 +64,20 @@ export function useHeadings(): UseHeadingsInterface {
     })
 
     ScrollTrigger.refresh()
-    setTimeout(
-      () => setInitialActiveHeading(headingElements, VIEWPORT_OFFSET),
-      100
-    )
+    setTimeout(() => setInitialActiveHeading(headingElements), 100)
   }
 
-  function setInitialActiveHeading(
-    headingElements: HTMLElement[],
-    offset: number
-  ): void {
+  function setInitialActiveHeading(headingElements: HTMLElement[]): void {
+    if (window.scrollY < 100 && headingElements[0]?.id) {
+      activeHeadingId.value = headingElements[0].id
+      return
+    }
+
+    const VIEWPORT_OFFSET = 150
     const activeElement =
       [...headingElements]
         .reverse()
-        .find((el) => el.getBoundingClientRect().top <= offset) ||
+        .find((el) => el.getBoundingClientRect().top <= VIEWPORT_OFFSET) ||
       headingElements[0]
 
     if (activeElement?.id) {
