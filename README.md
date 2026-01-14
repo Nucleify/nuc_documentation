@@ -1,32 +1,33 @@
 # <img src="https://nucleify.io/favicon.ico" width="17" height="17" /> &nbsp; nuc_documentation
 
-Module that provides Markdown-based documentation pages.
+Module that provides Markdown-based documentation pages with SSR/prerendering support.
 
 ## Features
 
-- **File-based content** - Documentation is stored in `.md` files
-- **Sidebar navigation** - Organized by categories and pages
-- **Markdown rendering** - Full markdown support with syntax highlighting
+- **Category-based organization** - Documentation organized by categories with nested pages
+- **SSR & Prerendering** - Content is prerendered for instant loading
+- **Table of Contents** - Auto-generated TOC with scroll tracking
+- **Syntax highlighting** - Code blocks with highlight.js
+- **Client-side navigation** - Fast navigation between pages via NuxtLink
+- **Prefetching** - Background prefetch of documentation content
 - **Responsive design** - Works on desktop and mobile
-
-## Structure
-
-```
-content/
-├── introduction.md
-├── installation.md
-├── quick-start.md
-├── modules.md
-├── atomic-design.md
-├── configuration.md
-├── atoms.md
-├── molecules.md
-└── organisms.md
-```
 
 ## Usage
 
-Add new documentation by creating `.md` files in the `content/` folder and registering them in the `DOC_CATEGORIES` constant.
+1. Create `.md` files in `content/{category}/`
+2. Register pages in `DOC_CATEGORIES` constant (`atomic/bosons/constants/documentation.ts`)
+
+## Utils
+
+| Function | Description |
+|----------|-------------|
+| `parseDocPath` | Parse URL path to category/slug |
+| `parseMarkdown` | Convert markdown to HTML |
+| `parseHeadings` | Extract headings from HTML |
+| `loadDocContentServer` | Load content during SSR |
+| `loadDocContentClient` | Load content on client |
+| `useHeadings` | Scroll tracking for TOC |
+| `useDocumentation` | Prefetch helpers |
 
 <br>
 
