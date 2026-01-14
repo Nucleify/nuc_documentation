@@ -15,18 +15,25 @@ export interface UseHeadingsInterface {
 export function useHeadings(): UseHeadingsInterface {
   const activeHeadingId = ref('')
   const scrollTriggers: ScrollTrigger[] = []
+  let isScrolling = false
 
   function scrollToHeading(id: string): void {
     const element = document.getElementById(id)
     if (!element) return
+
+    isScrolling = true
+    activeHeadingId.value = id
+    history.replaceState(null, '', `#${id}`)
 
     const offset = 100
     const position =
       element.getBoundingClientRect().top + window.scrollY - offset
 
     window.scrollTo({ top: position, behavior: 'smooth' })
-    history.replaceState(null, '', `#${id}`)
-    activeHeadingId.value = id
+
+    setTimeout(() => {
+      isScrolling = false
+    }, 1000)
   }
 
   function setupScrollTriggers(contentRef: HTMLElement | null): void {
@@ -55,7 +62,7 @@ export function useHeadings(): UseHeadingsInterface {
           start: `top ${VIEWPORT_OFFSET}px`,
           end: endPosition,
           onToggle: (self) => {
-            if (self.isActive) {
+            if (self.isActive && !isScrolling) {
               activeHeadingId.value = element.id
             }
           },
@@ -64,7 +71,7 @@ export function useHeadings(): UseHeadingsInterface {
     })
 
     ScrollTrigger.refresh()
-    setTimeout(() => setInitialActiveHeading(headingElements), 100)
+    setInitialActiveHeading(headingElements)
   }
 
   function setInitialActiveHeading(headingElements: HTMLElement[]): void {
