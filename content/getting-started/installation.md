@@ -53,5 +53,5 @@ Your application will be available at `http://localhost:3000`.
 
 ## Next Steps
 
-Now that you have Nucleify installed, check out the [Quick Start](/documentation/quick-start) guide to create your first module.
+Now that you have Nucleify installed, check out the [Quick Start](/docs/getting-started/quick-start) guide to create your first module.
 

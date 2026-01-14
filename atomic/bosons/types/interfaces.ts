@@ -1,5 +1,3 @@
-import type { Ref } from 'vue'
-
 export interface DocPageInterface {
   slug: string
   title: string
@@ -14,26 +12,9 @@ export interface DocCategoryInterface {
   order?: number
 }
 
-export interface DocContentInterface {
-  meta: DocPageInterface
-  content: string
-}
-
 export interface DocHeadingInterface {
   id: string
   text: string
   level: number
   children?: DocHeadingInterface[]
-}
-
-export interface UseDocumentationInterface {
-  categories: Ref<DocCategoryInterface[]>
-  activePage: Ref<DocPageInterface | null>
-  activeContent: Ref<string>
-  loading: Ref<boolean>
-  loadPage: (slug: string, category: string) => Promise<void>
-  setActivePage: (page: DocPageInterface) => void
-  prefetchAll: () => Promise<void>
-  prefetchFirstPage: () => Promise<void>
-  loadPageFromPath: (path: string) => Promise<boolean>
 }

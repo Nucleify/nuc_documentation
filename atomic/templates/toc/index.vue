@@ -48,10 +48,10 @@
 </template>
 
 <script setup lang="ts">
-import type { HeadingInterface } from 'atomic'
+import type { DocHeadingInterface } from 'atomic'
 
 interface DocumentationTocProps {
-  headings: HeadingInterface[]
+  headings: DocHeadingInterface[]
   activeHeadingId: string
 }
 

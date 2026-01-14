@@ -1,18 +1,18 @@
 import type { DocHeadingInterface } from '../types'
 
 export function parseHeadings(html: string): DocHeadingInterface[] {
-  const parser = new DOMParser()
-  const doc = parser.parseFromString(html, 'text/html')
-  const headings = doc.querySelectorAll('h2, h3, h4, h5, h6')
+  // Use regex to parse headings - works on both server and client
+  const headingRegex = /<h([2-6])[^>]*id="([^"]*)"[^>]*>([^<]*)<\/h[2-6]>/gi
   const result: DocHeadingInterface[] = []
   const stack: DocHeadingInterface[] = []
 
-  headings.forEach((heading) => {
-    const level = parseInt(heading.tagName.charAt(1), 10)
-    const id = heading.id || ''
-    const text = heading.textContent?.trim() || ''
+  let match
+  while ((match = headingRegex.exec(html)) !== null) {
+    const level = parseInt(match[1], 10)
+    const id = match[2] || ''
+    const text = match[3]?.trim() || ''
 
-    if (!id || !text) return
+    if (!id || !text) continue
 
     const headingObj: DocHeadingInterface = {
       id,
@@ -35,7 +35,7 @@ export function parseHeadings(html: string): DocHeadingInterface[] {
       parent.children.push(headingObj)
       stack.push(headingObj)
     }
-  })
+  }
 
   return result
 }

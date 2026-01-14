@@ -1,30 +1,20 @@
 import { gsap } from 'gsap'
-import type { Ref } from 'vue'
 import { onUnmounted, ref } from 'vue'
 
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import type { DocHeadingInterface } from '../types'
-import { parseHeadings } from './parse_headings'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export interface UseHeadingsInterface {
-  headings: Ref<DocHeadingInterface[]>
-  activeHeadingId: Ref<string>
-  updateHeadings: (content: string) => void
+  activeHeadingId: ReturnType<typeof ref<string>>
   scrollToHeading: (id: string) => void
   setupScrollTriggers: (contentRef: HTMLElement | null) => void
   cleanupScrollTriggers: () => void
 }
 
 export function useHeadings(): UseHeadingsInterface {
-  const headings = ref<DocHeadingInterface[]>([])
-  const activeHeadingId = ref<string>('')
+  const activeHeadingId = ref('')
   const scrollTriggers: ScrollTrigger[] = []
-
-  function updateHeadings(content: string): void {
-    headings.value = content ? parseHeadings(content) : []
-  }
 
   function scrollToHeading(id: string): void {
     const element = document.getElementById(id)
@@ -55,14 +45,9 @@ export function useHeadings(): UseHeadingsInterface {
       const isLast = index === headingElements.length - 1
       const nextElement = headingElements[index + 1]
 
-      let endPosition: string
-      if (isLast) {
-        const distanceToEnd = contentRef.scrollHeight - element.offsetTop
-        endPosition = `+=${distanceToEnd}`
-      } else {
-        const distance = nextElement.offsetTop - element.offsetTop
-        endPosition = `+=${distance - 1}`
-      }
+      const endPosition = isLast
+        ? `+=${contentRef.scrollHeight - element.offsetTop}`
+        : `+=${nextElement.offsetTop - element.offsetTop - 1}`
 
       scrollTriggers.push(
         ScrollTrigger.create({
@@ -108,9 +93,7 @@ export function useHeadings(): UseHeadingsInterface {
   onUnmounted(cleanupScrollTriggers)
 
   return {
-    headings,
     activeHeadingId,
-    updateHeadings,
     scrollToHeading,
     setupScrollTriggers,
     cleanupScrollTriggers,

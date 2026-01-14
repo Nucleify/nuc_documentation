@@ -55,5 +55,5 @@ Complex UI components - navigation, data tables.
 
 ## Next Steps
 
-Learn more about [Modules](/documentation/modules) and how to organize your application.
+Learn more about [Modules](/docs/core-concepts/modules) and how to organize your application.
 

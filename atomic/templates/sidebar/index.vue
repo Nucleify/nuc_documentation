@@ -8,13 +8,14 @@
       <h3 class="category-title">{{ category.name }}</h3>
       <ul class="category-pages">
         <li v-for="page in category.pages" :key="page.slug">
-          <a
+          <nuxt-link
+            :to="`/docs/${category.slug}/${page.slug}`"
             class="page-link"
-            :class="{ active: activePage?.slug === page.slug }"
-            @click="handlePageClick(page)"
+            :class="{ active: currentSlug === page.slug }"
+            @click="scrollToTop"
           >
             {{ page.title }}
-          </a>
+          </nuxt-link>
         </li>
       </ul>
     </div>
@@ -22,26 +23,26 @@
 </template>
 
 <script setup lang="ts">
-import type { DocCategoryInterface, DocPageInterface } from 'atomic'
+import { useRoute } from 'nuxt/app'
+import { computed } from 'vue'
 
-interface DocumentationSidebarProps {
+import { type DocCategoryInterface, parseDocPath } from 'atomic'
+
+interface Props {
   categories: DocCategoryInterface[]
-  activePage: DocPageInterface | null
 }
 
-defineProps<DocumentationSidebarProps>()
+defineProps<Props>()
 
-const emit = defineEmits<{
-  'page-click': [page: DocPageInterface]
-}>()
+const route = useRoute()
 
-function handlePageClick(page: DocPageInterface): void {
+const currentSlug = computed(() => parseDocPath(route.path)?.slug ?? '')
+
+function scrollToTop(): void {
   window.scrollTo({ top: 0, behavior: 'instant' })
-  emit('page-click', page)
 }
 </script>
 
 <style lang="scss" scoped>
 @import 'index';
 </style>
-

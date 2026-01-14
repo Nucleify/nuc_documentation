@@ -25,5 +25,5 @@ Traditional monolithic frameworks often become difficult to maintain as your app
 
 ## Next Steps
 
-Ready to get started? Check out the [Installation](/documentation/installation) guide to set up your first Nucleify project.
+Ready to get started? Check out the [Installation](/docs/getting-started/installation) guide to set up your first Nucleify project.
 

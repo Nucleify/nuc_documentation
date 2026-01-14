@@ -2,26 +2,19 @@
   <div class="documentation-wrapper">
     <nuc-section-navbar />
     <div class="documentation-container">
-      <nuc-documentation-sidebar
-        :categories="categories"
-        :active-page="activePage"
-        @page-click="setActivePage"
-      />
+      <nuc-documentation-sidebar :categories="DOC_CATEGORIES" />
 
-      <main
-        v-if="!loading && activeContent"
-        class="documentation-content"
-      >
+      <main v-if="content" class="documentation-content">
         <div
           ref="contentRef"
-          v-sanitize-html="activeContent"
+          v-sanitize-html="content"
           class="doc-content"
         />
       </main>
 
       <nuc-documentation-toc
         :headings="headings"
-        :active-heading-id="activeHeadingId"
+        :active-heading-id="activeHeadingId ?? ''"
         @heading-click="scrollToHeading"
       />
     </div>
@@ -33,96 +26,84 @@
 </template>
 
 <script setup lang="ts">
-import { useRoute } from 'nuxt/app'
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { navigateTo, useRoute, useState } from 'nuxt/app'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
 import {
+  DOC_CATEGORIES,
+  type DocHeadingInterface,
+  loadDocContentClient,
+  loadDocContentServer,
   NucDocumentationSidebar,
   NucDocumentationToc,
-  useDocumentation,
+  parseDocPath,
   useHeadings,
 } from 'atomic'
 
 const route = useRoute()
 
-const {
-  categories,
-  activePage,
-  activeContent,
-  loading,
-  setActivePage,
-  prefetchAll,
-  loadPage,
-  loadPageFromPath,
-} = useDocumentation()
+const DEFAULT_DOC_PATH = `/docs/${DOC_CATEGORIES[0].slug}/${DOC_CATEGORIES[0].pages[0].slug}`
+
+if (import.meta.client && (route.path === '/docs' || route.path === '/docs/')) {
+  await navigateTo(DEFAULT_DOC_PATH, { replace: true })
+}
+
+const contentState = useState<string>('doc-content', () => '')
+const headingsState = useState<DocHeadingInterface[]>('doc-headings', () => [])
+
+const content = computed(() => contentState.value)
+const headings = computed(() => headingsState.value)
+
+if (import.meta.server) {
+  const pathInfo = parseDocPath(route.path)
+  if (pathInfo) {
+    try {
+      const doc = await loadDocContentServer(pathInfo.category, pathInfo.slug)
+      contentState.value = doc.html
+      headingsState.value = doc.headings
+    } catch (e) {
+      console.error('Failed to load doc:', e)
+    }
+  }
+}
 
 const contentRef = ref<HTMLElement | null>(null)
-const {
-  headings,
-  activeHeadingId,
-  updateHeadings,
-  scrollToHeading,
-  setupScrollTriggers,
-  cleanupScrollTriggers,
-} = useHeadings()
+const { activeHeadingId, scrollToHeading, setupScrollTriggers } = useHeadings()
 
-watch(activeContent, () => {
-  nextTick(() => {
-    updateHeadings(activeContent.value)
-    nextTick(() => {
-      setupScrollTriggers(contentRef.value)
-    })
-  })
-})
+async function loadContent(path: string): Promise<void> {
+  const pathInfo = parseDocPath(path)
+  if (!pathInfo) return
+
+  try {
+    const doc = await loadDocContentClient(pathInfo.category, pathInfo.slug)
+    contentState.value = doc.html
+    headingsState.value = doc.headings
+
+    nextTick(() => setupScrollTriggers(contentRef.value))
+  } catch (e) {
+    console.error('Failed to load doc:', e)
+  }
+}
+
+watch(
+  () => route.path,
+  (newPath) => {
+    if (import.meta.client) loadContent(newPath)
+  }
+)
 
 onMounted(async () => {
-  const path = route.path
-
-  if (path && path.startsWith('/docs/') && path !== '/docs') {
-    const loaded = await loadPageFromPath(path)
-    if (loaded) {
-      await prefetchAll()
-      nextTick(() => {
-        updateHeadings(activeContent.value)
-        nextTick(() => {
-          setupScrollTriggers(contentRef.value)
-          if (window.location.hash) {
-            const id = window.location.hash.slice(1)
-            scrollToHeading(id)
-          }
-        })
-      })
-      return
-    }
+  if (!contentState.value) {
+    await loadContent(route.path)
   }
-
-  if (categories.value.length > 0 && categories.value[0].pages.length > 0) {
-    const firstPage = categories.value[0].pages[0]
-    const category = categories.value[0].slug
-
-    await loadPage(firstPage.slug, category)
-
-    if (!activePage.value) {
-      setActivePage(firstPage)
-    }
-  }
-
-  await prefetchAll()
 
   nextTick(() => {
-    updateHeadings(activeContent.value)
-    nextTick(() => {
-      setupScrollTriggers(contentRef.value)
-      if (window.location.hash) {
-        const id = window.location.hash.slice(1)
-        scrollToHeading(id)
-      }
-    })
-  })
-})
+    setupScrollTriggers(contentRef.value)
 
-onUnmounted(() => {
-  cleanupScrollTriggers()
+    if (window.location.hash) {
+      scrollToHeading(window.location.hash.slice(1))
+    }
+  })
 })
 </script>
 
