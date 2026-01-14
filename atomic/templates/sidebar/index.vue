@@ -12,7 +12,6 @@
             :to="`/docs/${category.slug}/${page.slug}`"
             class="page-link"
             :class="{ active: currentSlug === page.slug }"
-            @click="scrollToTop"
           >
             {{ page.title }}
           </nuxt-link>
@@ -37,10 +36,6 @@ defineProps<Props>()
 const route = useRoute()
 
 const currentSlug = computed(() => parseDocPath(route.path)?.slug ?? '')
-
-function scrollToTop(): void {
-  window.scrollTo({ top: 0, behavior: 'instant' })
-}
 </script>
 
 <style lang="scss" scoped>

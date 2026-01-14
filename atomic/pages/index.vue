@@ -70,7 +70,7 @@ if (import.meta.server) {
 const contentRef = ref<HTMLElement | null>(null)
 const { activeHeadingId, scrollToHeading, setupScrollTriggers } = useHeadings()
 
-async function loadContent(path: string): Promise<void> {
+async function loadContent(path: string, scrollTop = false): Promise<void> {
   const pathInfo = parseDocPath(path)
   if (!pathInfo) return
 
@@ -78,6 +78,10 @@ async function loadContent(path: string): Promise<void> {
     const doc = await loadDocContentClient(pathInfo.category, pathInfo.slug)
     contentState.value = doc.html
     headingsState.value = doc.headings
+
+    if (scrollTop) {
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    }
 
     nextTick(() => setupScrollTriggers(contentRef.value))
   } catch (e) {
@@ -88,7 +92,7 @@ async function loadContent(path: string): Promise<void> {
 watch(
   () => route.path,
   (newPath) => {
-    if (import.meta.client) loadContent(newPath)
+    if (import.meta.client) loadContent(newPath, true)
   }
 )
 
