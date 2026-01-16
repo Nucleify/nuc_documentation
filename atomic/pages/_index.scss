@@ -1,5 +1,6 @@
 .documentation-wrapper {
   position: relative;
+  width: 100%;
   min-height: calc(100vh - 76px);
 
   .documentation-container {
@@ -146,7 +147,7 @@
       margin: 1.5rem 0;
       border: 1px solid $p-card-border;
       border-radius: 0.5rem;
-      overflow: hidden;
+      overflow-x: scroll;
 
       th,
       td {
@@ -163,10 +164,18 @@
 
       td {
         color: rgb(255 255 255 / 85%);
+
+        code {
+          white-space: nowrap;
+        }
       }
 
       tr:last-child td {
         border-bottom: none;
+      }
+
+      @media (width <= $md) {
+        display: block;
       }
     }
 
@@ -180,6 +189,7 @@
   .documentation-content {
     margin: 80px auto 600px;
     padding: 2rem 3rem;
+    width: 100%;
     max-width: 900px;
     flex: 1;
 
