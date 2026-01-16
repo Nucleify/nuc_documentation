@@ -10,6 +10,7 @@
           v-sanitize-html="content"
           class="doc-content"
         />
+        <nuc-documentation-pagination />
       </main>
 
       <nuc-documentation-toc
@@ -34,6 +35,7 @@ import {
   type DocHeadingInterface,
   loadDocContentClient,
   loadDocContentServer,
+  NucDocumentationPagination,
   NucDocumentationSidebar,
   NucDocumentationToc,
   parseDocPath,

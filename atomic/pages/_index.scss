@@ -184,7 +184,7 @@
     flex: 1;
 
     @media (width <= 768px) {
-      padding: 1.5rem;
+      padding: 1rem;
     }
 
     .content-loading {
@@ -210,7 +210,6 @@
       }
     }
   }
-
 }
 
 #documentation {
@@ -218,8 +217,10 @@
     opacity: 1 !important;
 
     * {
-      opacity: 1 !important;
-      transform: none !important;
+      &:not(.hexagon-rows-container *) {
+        opacity: 1 !important;
+        transform: none !important;
+      }
     }
   }
 }
