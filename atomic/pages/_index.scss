@@ -217,7 +217,10 @@
     opacity: 1 !important;
 
     * {
-      &:not(.hexagon-rows-container *) {
+      &:not(
+        .nuc-hexagons-button .p-ink, 
+        .hexagon-rows-container *
+      ) {
         opacity: 1 !important;
         transform: none !important;
       }
