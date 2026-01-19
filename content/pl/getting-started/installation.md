@@ -138,7 +138,7 @@ Jeśli porty 80, 3000 lub 3306 są zajęte, zaktualizuj `docker-compose.yml` lub
 
 🎉 **Gratulacje!** Jesteś gotowy do budowania.
 
-1. **[Szybki Start](/pl/docs/getting-started/quick-start)** - Stwórz swój pierwszy moduł
+1. **[Szybki Start](/pl/docs/getting-started/quick-start)** - Stwórz swój pierwszy komponent
 2. **[Przegląd Modułów](/pl/docs/modules/overview)** - Poznaj dostępne moduły
 3. **[Architektura](/pl/docs/architecture/overview)** - Zrozum projektowanie systemu
 
