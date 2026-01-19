@@ -3,7 +3,7 @@
     <template v-for="item in paginationItems" :key="item.type">
       <nuxt-link
         v-if="item.page"
-        :to="`/docs/${item.page.category}/${item.page.slug}`"
+        :to="getPageUrl(item.page.category, item.page.slug)"
         :class="['pagination-link', item.type]"
       >
         <span class="pagination-label">{{ item.label }}</span>
@@ -23,7 +23,7 @@
 import { useRoute } from 'nuxt/app'
 import { computed } from 'vue'
 
-import { DOC_CATEGORIES, parseDocPath } from 'atomic'
+import { DOC_CATEGORIES, getDocBasePath, parseDocPath } from 'atomic'
 
 interface PaginationPage {
   category: string
@@ -38,6 +38,9 @@ interface PaginationItem {
 }
 
 const route = useRoute()
+
+const pathInfo = computed(() => parseDocPath(route.path))
+const currentLang = computed(() => pathInfo.value?.lang ?? 'en')
 
 const flatPages = computed<PaginationPage[]>(() => {
   const pages: PaginationPage[] = []
@@ -54,10 +57,10 @@ const flatPages = computed<PaginationPage[]>(() => {
 })
 
 const currentIndex = computed(() => {
-  const pathInfo = parseDocPath(route.path)
-  if (!pathInfo) return -1
+  if (!pathInfo.value) return -1
   return flatPages.value.findIndex(
-    (p) => p.category === pathInfo.category && p.slug === pathInfo.slug
+    (p) =>
+      p.category === pathInfo.value?.category && p.slug === pathInfo.value?.slug
   )
 })
 
@@ -77,6 +80,11 @@ const paginationItems = computed<PaginationItem[]>(() => [
         : null,
   },
 ])
+
+function getPageUrl(categorySlug: string, pageSlug: string): string {
+  const basePath = getDocBasePath(currentLang.value)
+  return `${basePath}/${categorySlug}/${pageSlug}`
+}
 </script>
 
 <style lang="scss">

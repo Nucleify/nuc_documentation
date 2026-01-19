@@ -1,28 +1,29 @@
-import { DOC_CATEGORIES } from '../constants'
+import { DOC_CATEGORIES } from '../constants/documentation'
+import { DEFAULT_LANG } from '../constants/languages'
 import { parseMarkdown } from './parse_markdown'
 
 export interface UseDocumentationInterface {
-  prefetchFirstPage: () => Promise<void>
-  prefetchAll: () => Promise<void>
+  prefetchFirstPage: (lang?: string) => Promise<void>
+  prefetchAll: (lang?: string) => Promise<void>
 }
 
 export function useDocumentation(): UseDocumentationInterface {
-  async function prefetchFirstPage(): Promise<void> {
+  async function prefetchFirstPage(lang: string = DEFAULT_LANG): Promise<void> {
     const firstCategory = DOC_CATEGORIES[0]
     const firstPage = firstCategory.pages[0]
 
     await $fetch<string>(
       appUrl() +
-        `/modules/nuc_documentation/content/${firstCategory.slug}/${firstPage.slug}.md`
+        `/modules/nuc_documentation/content/${lang}/${firstCategory.slug}/${firstPage.slug}.md`
     )
   }
 
-  async function prefetchAll(): Promise<void> {
+  async function prefetchAll(lang: string = DEFAULT_LANG): Promise<void> {
     const requests = DOC_CATEGORIES.flatMap((category) =>
       category.pages.map((page) =>
         $fetch<string>(
           appUrl() +
-            `/modules/nuc_documentation/content/${category.slug}/${page.slug}.md`
+            `/modules/nuc_documentation/content/${lang}/${category.slug}/${page.slug}.md`
         ).then(parseMarkdown)
       )
     )

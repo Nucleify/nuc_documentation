@@ -9,7 +9,7 @@
       <ul class="category-pages">
         <li v-for="page in category.pages" :key="page.slug">
           <nuxt-link
-            :to="`/docs/${category.slug}/${page.slug}`"
+            :to="getPageUrl(category.slug, page.slug)"
             class="page-link"
             :class="{ active: currentSlug === page.slug }"
           >
@@ -25,7 +25,7 @@
 import { useRoute } from 'nuxt/app'
 import { computed } from 'vue'
 
-import { type DocCategoryInterface, parseDocPath } from 'atomic'
+import { type DocCategoryInterface, getDocBasePath, parseDocPath } from 'atomic'
 
 interface Props {
   categories: DocCategoryInterface[]
@@ -35,7 +35,14 @@ defineProps<Props>()
 
 const route = useRoute()
 
-const currentSlug = computed(() => parseDocPath(route.path)?.slug ?? '')
+const pathInfo = computed(() => parseDocPath(route.path))
+const currentSlug = computed(() => pathInfo.value?.slug ?? '')
+const currentLang = computed(() => pathInfo.value?.lang ?? 'en')
+
+function getPageUrl(categorySlug: string, pageSlug: string): string {
+  const basePath = getDocBasePath(currentLang.value)
+  return `${basePath}/${categorySlug}/${pageSlug}`
+}
 </script>
 
 <style lang="scss" scoped>

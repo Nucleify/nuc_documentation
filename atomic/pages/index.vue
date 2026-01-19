@@ -5,6 +5,20 @@
       <nuc-documentation-sidebar :categories="DOC_CATEGORIES" />
 
       <main v-if="content" class="documentation-content">
+        <div class="documentation-header">
+          <nuc-documentation-language-switcher />
+        </div>
+
+        <!-- Hidden links for prerendering all language versions -->
+        <nav aria-hidden="true" class="prerender-links">
+          <NuxtLink
+            v-for="lang in DOC_LANGUAGES"
+            :key="lang.code"
+            :to="getLanguageUrl(lang.code)"
+          >
+            {{ lang.name }}
+          </NuxtLink>
+        </nav>
         <div
           ref="contentRef"
           v-sanitize-html="content"
@@ -27,14 +41,17 @@
 </template>
 
 <script setup lang="ts">
-import { navigateTo, useRoute, useState } from 'nuxt/app'
+import { navigateTo, onBeforeRouteUpdate, useRoute, useState } from 'nuxt/app'
 import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
 import {
   DOC_CATEGORIES,
+  DOC_LANGUAGES,
   type DocHeadingInterface,
+  getDocBasePath,
   loadDocContentClient,
   loadDocContentServer,
+  NucDocumentationLanguageSwitcher,
   NucDocumentationPagination,
   NucDocumentationSidebar,
   NucDocumentationToc,
@@ -44,10 +61,33 @@ import {
 
 const route = useRoute()
 
-const DEFAULT_DOC_PATH = `/docs/${DOC_CATEGORIES[0].slug}/${DOC_CATEGORIES[0].pages[0].slug}`
+function getDefaultDocPath(lang: string): string {
+  const basePath = getDocBasePath(lang)
+  return `${basePath}/${DOC_CATEGORIES[0].slug}/${DOC_CATEGORIES[0].pages[0].slug}`
+}
 
-if (import.meta.client && (route.path === '/docs' || route.path === '/docs/')) {
-  await navigateTo(DEFAULT_DOC_PATH, { replace: true })
+function isDocsRootPath(path: string): boolean {
+  return (
+    path === '/docs' || path === '/docs/' || /^\/[a-z]{2}\/docs\/?$/.test(path)
+  )
+}
+
+function extractLangFromPath(path: string): string {
+  const match = path.match(/^\/([a-z]{2})\/docs/)
+  return match ? match[1] : 'en'
+}
+
+function getLanguageUrl(lang: string): string {
+  const pathInfo = parseDocPath(route.path)
+  if (!pathInfo) return getDocBasePath(lang)
+
+  const basePath = getDocBasePath(lang)
+  return `${basePath}/${pathInfo.category}/${pathInfo.slug}`
+}
+
+if (import.meta.client && isDocsRootPath(route.path)) {
+  const lang = extractLangFromPath(route.path)
+  await navigateTo(getDefaultDocPath(lang), { replace: true })
 }
 
 const contentState = useState<string>('doc-content', () => '')
@@ -60,7 +100,11 @@ if (import.meta.server) {
   const pathInfo = parseDocPath(route.path)
   if (pathInfo) {
     try {
-      const doc = await loadDocContentServer(pathInfo.category, pathInfo.slug)
+      const doc = await loadDocContentServer(
+        pathInfo.category,
+        pathInfo.slug,
+        pathInfo.lang
+      )
       contentState.value = doc.html
       headingsState.value = doc.headings
     } catch (e) {
@@ -77,7 +121,13 @@ async function loadContent(path: string, scrollTop = false): Promise<void> {
   if (!pathInfo) return
 
   try {
-    const doc = await loadDocContentClient(pathInfo.category, pathInfo.slug)
+    await nextTick()
+
+    const doc = await loadDocContentClient(
+      pathInfo.category,
+      pathInfo.slug,
+      pathInfo.lang
+    )
     contentState.value = doc.html
     headingsState.value = doc.headings
 
@@ -92,11 +142,18 @@ async function loadContent(path: string, scrollTop = false): Promise<void> {
 }
 
 watch(
-  () => route.path,
-  (newPath) => {
-    if (import.meta.client) loadContent(newPath, true)
-  }
+  () => route.fullPath,
+  (newPath, oldPath) => {
+    if (import.meta.client && newPath !== oldPath) {
+      loadContent(newPath, true)
+    }
+  },
+  { immediate: false }
 )
+
+onBeforeRouteUpdate(async (to) => {
+  await loadContent(to.path, true)
+})
 
 onMounted(async () => {
   if (!contentState.value) {

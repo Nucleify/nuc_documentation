@@ -1,0 +1,21 @@
+.doc-language-switcher {
+  min-width: 120px;
+
+  &.p-select {
+    background: $content-background;
+    border: $primary-border $p-card-border;
+
+    &:hover {
+      border-color: $p-card-box-shadow;
+    }
+
+    .p-select-label {
+      color: $white-text-color;
+      font-size: $font-size-sm;
+    }
+
+    .p-select-dropdown {
+      color: $primary-white-text-color;
+    }
+  }
+}

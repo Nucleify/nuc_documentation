@@ -1,3 +1,4 @@
+import { DEFAULT_LANG } from '../constants/languages'
 import type { DocHeadingInterface } from '../types'
 import { parseHeadings } from './parse_headings'
 import { parseMarkdown } from './parse_markdown'
@@ -9,7 +10,8 @@ export interface DocContent {
 
 export async function loadDocContentServer(
   category: string,
-  slug: string
+  slug: string,
+  lang: string = DEFAULT_LANG
 ): Promise<DocContent> {
   const { readFile } = await import('node:fs/promises')
   const { join } = await import('node:path')
@@ -19,6 +21,7 @@ export async function loadDocContentServer(
     'modules',
     'nuc_documentation',
     'content',
+    lang,
     category,
     `${slug}.md`
   )
@@ -32,10 +35,12 @@ export async function loadDocContentServer(
 
 export async function loadDocContentClient(
   category: string,
-  slug: string
+  slug: string,
+  lang: string = DEFAULT_LANG
 ): Promise<DocContent> {
   const markdown = await $fetch<string>(
-    appUrl() + `/modules/nuc_documentation/content/${category}/${slug}.md`
+    appUrl() +
+      `/modules/nuc_documentation/content/${lang}/${category}/${slug}.md`
   )
 
   const html = await parseMarkdown(markdown)

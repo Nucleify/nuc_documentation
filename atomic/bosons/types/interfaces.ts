@@ -18,3 +18,15 @@ export interface DocHeadingInterface {
   level: number
   children?: DocHeadingInterface[]
 }
+
+export interface DocLanguageInterface {
+  code: string
+  name: string
+  isDefault: boolean
+}
+
+export interface DocPathInfoInterface {
+  lang: string
+  category: string
+  slug: string
+}
