@@ -1,7 +1,7 @@
 {
   "name": "nuc_documentation",
   "description": "Module that contains documentation functions.",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "category": "core",
   "installed": true,
   "enabled": true

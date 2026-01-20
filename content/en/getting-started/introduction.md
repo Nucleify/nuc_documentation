@@ -123,7 +123,7 @@ Each module is self-contained, independently testable, and can be enabled/disabl
 
 Each module encapsulates all related code within a single directory:
 
-```
+```txt
 modules/nuc_auth/
 ├── app/                    # Backend PHP (Controllers, Services, Models)
 ├── atomic/                 # Frontend components (Vue, TypeScript)
@@ -177,5 +177,3 @@ Overrides are automatically merged at build time, allowing you to:
 2. **[Quick Start](/docs/getting-started/quick-start)** - Create your first component
 3. **[Modules](/docs/modules/overview)** - Explore available modules
 4. **[Architecture](/docs/architecture/overview)** - Deep dive into system design
-
-

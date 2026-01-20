@@ -19,13 +19,13 @@ Nucleify uses Atomic Design methodology to organize components:
 
 Navigate to the appropriate atomic level in `nuxt/atomic/`:
 
-```
+```txt
 nuxt/atomic/atom/my-component/
-├── index.ts          # Exports
-├── index.vue         # Component
+├── index.ts            # Exports
+├── index.vue           # Component
 └── types/
-    ├── index.ts      # Type exports
-    └── interfaces.ts # Component interfaces
+    ├── index.ts        # Type exports
+    └── interfaces.ts   # Component interfaces
 ```
 
 ### 2. Define the Interface
@@ -50,7 +50,7 @@ export * from './interfaces'
 
 Create your Vue component in `index.vue`:
 
-```vue
+```html
 <template>
   <div :class="$style['my-component']">
     {{ props.label }}
@@ -92,7 +92,7 @@ export * from './my-component'
 
 Components in `nuxt/atomic/` are **automatically registered** by Nuxt with the `ad-` prefix. No manual imports needed in templates!
 
-```vue
+```html
 <template>
   <!-- These work automatically - no imports required -->
   <ad-button label="Click me" />
@@ -113,7 +113,7 @@ Components in `nuxt/atomic/` are **automatically registered** by Nuxt with the `
 
 When you need to use components or types in script (not template), import from `atomic`:
 
-```vue
+```html
 <script setup lang="ts">
 import { AdButton, type ButtonInterface } from 'atomic'
 
@@ -139,7 +139,7 @@ For Atomic Design components we recommend using **CSS Modules** - they provide a
 
 Use `module` attribute on the style tag. Access classes via `$style` object:
 
-```vue
+```html
 <template>
   <div :class="$style['my-component']">
     <span :class="$style.label">{{ label }}</span>
@@ -167,7 +167,7 @@ Use `module` attribute on the style tag. Access classes via `$style` object:
 
 Global styles without scoping. Classes are used directly in template:
 
-```vue
+```html
 <template>
   <div class="my-component">
     <span class="label">{{ label }}</span>
@@ -195,7 +195,7 @@ Global styles without scoping. Classes are used directly in template:
 
 For complex components, extract styles to `_index.scss`:
 
-```
+```txt
 my-component/
 ├── _index.scss   # Styles
 ├── index.ts
@@ -204,7 +204,7 @@ my-component/
 
 Import in your component:
 
-```vue
+```html
 <style lang="scss">
 @import 'index';
 </style>
@@ -223,5 +223,5 @@ Import in your component:
 ## Next Steps
 
 - Learn about [Modules](/docs/core-concepts/modules) for organizing features
-- Explore [Components](/docs/components) reference
+- Explore [Atomic Design](/docs/core-concepts/atomic-design) methodology
 - Read [Code Standards](/docs/contributing/code-standards) for best practices

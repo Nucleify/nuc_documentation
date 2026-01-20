@@ -19,13 +19,13 @@ Nucleify wykorzystuje metodologię Atomic Design do organizacji komponentów:
 
 Przejdź do odpowiedniego poziomu atomic w `nuxt/atomic/`:
 
-```
+```txt
 nuxt/atomic/atom/my-component/
-├── index.ts          # Eksporty
-├── index.vue         # Komponent
+├── index.ts            # Eksporty
+├── index.vue           # Komponent
 └── types/
-    ├── index.ts      # Eksporty typów
-    └── interfaces.ts # Interfejsy komponentu
+    ├── index.ts        # Eksporty typów
+    └── interfaces.ts   # Interfejsy komponentu
 ```
 
 ### 2. Zdefiniuj Interfejs
@@ -50,7 +50,7 @@ export * from './interfaces'
 
 Utwórz komponent Vue w `index.vue`:
 
-```vue
+```html
 <template>
   <div :class="$style['my-component']">
     {{ props.label }}
@@ -92,7 +92,7 @@ export * from './my-component'
 
 Komponenty w `nuxt/atomic/` są **automatycznie rejestrowane** przez Nuxt z prefixem `ad-`. Nie potrzeba ręcznych importów w templateach!
 
-```vue
+```html
 <template>
   <!-- Działają automatycznie - bez importów -->
   <ad-button label="Kliknij mnie" />
@@ -113,7 +113,7 @@ Komponenty w `nuxt/atomic/` są **automatycznie rejestrowane** przez Nuxt z pref
 
 Gdy potrzebujesz użyć komponentów lub typów w script (nie template), importuj z `atomic`:
 
-```vue
+```html
 <script setup lang="ts">
 import { AdButton, type ButtonInterface } from 'atomic'
 
@@ -139,7 +139,7 @@ Dla komponentów Atomic Design zalecamy używanie **CSS Modules** - zapewniają 
 
 Użyj atrybutu `module` na tagu style. Dostęp do klas przez obiekt `$style`:
 
-```vue
+```html
 <template>
   <div :class="$style['my-component']">
     <span :class="$style.label">{{ label }}</span>
@@ -167,7 +167,7 @@ Użyj atrybutu `module` na tagu style. Dostęp do klas przez obiekt `$style`:
 
 Globalne style bez scopowania. Klasy używane bezpośrednio w template:
 
-```vue
+```html
 <template>
   <div class="my-component">
     <span class="label">{{ label }}</span>
@@ -195,7 +195,7 @@ Globalne style bez scopowania. Klasy używane bezpośrednio w template:
 
 Dla złożonych komponentów, wyodrębnij style do `_index.scss`:
 
-```
+```txt
 my-component/
 ├── _index.scss   # Style
 ├── index.ts
@@ -204,7 +204,7 @@ my-component/
 
 Zaimportuj w komponencie:
 
-```vue
+```html
 <style lang="scss">
 @import 'index';
 </style>
@@ -223,6 +223,6 @@ Zaimportuj w komponencie:
 ## Następne Kroki
 
 - Dowiedz się więcej o [Modułach](/docs/core-concepts/modules) do organizacji funkcji
-- Przeglądaj referencję [Komponentów](/docs/components)
+- Poznaj metodologię [Atomic Design](/docs/core-concepts/atomic-design)
 - Przeczytaj [Standardy Kodu](/docs/contributing/code-standards) dla najlepszych praktyk
 

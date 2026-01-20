@@ -1,107 +1,107 @@
 # Atomic Design
 
-Nucleify implements Atomic Design methodology to create consistent, scalable, and maintainable UI systems.
+Nucleify implementuje metodologię Atomic Design do tworzenia spójnych, skalowalnych i łatwych w utrzymaniu systemów UI.
 
-## What is Atomic Design?
+## Czym jest Atomic Design?
 
-Atomic Design is a methodology created by Brad Frost that breaks down user interfaces into fundamental building blocks. Inspired by chemistry, it organizes components into a hierarchy from the smallest elements to complete pages.
+Atomic Design to metodologia stworzona przez Brada Frosta, która rozkłada interfejsy użytkownika na podstawowe elementy składowe. Inspirowana chemią, organizuje komponenty w hierarchię od najmniejszych elementów do kompletnych stron.
 
-**Key benefits:**
-- **Consistency** - Reusable components ensure uniform look and feel
-- **Maintainability** - Changes propagate automatically through the system
-- **Scalability** - Easy to extend without breaking existing functionality
-- **Collaboration** - Clear structure improves team communication
+**Kluczowe korzyści:**
+- **Spójność** - Komponenty wielokrotnego użytku zapewniają jednolity wygląd
+- **Łatwość utrzymania** - Zmiany propagują się automatycznie przez cały system
+- **Skalowalność** - Łatwe rozszerzanie bez naruszania istniejącej funkcjonalności
+- **Współpraca** - Przejrzysta struktura ułatwia komunikację w zespole
 
 ---
 
-## Core Principle: No Business Logic
+## Główna zasada: Brak logiki biznesowej
 
-> **Atomic Design components must NOT contain business logic.**
+> **Komponenty Atomic Design NIE MOGĄ zawierać logiki biznesowej.**
 
-Components should only include functionality directly related to their UI behavior:
+Komponenty powinny zawierać tylko funkcjonalność bezpośrednio związaną z ich zachowaniem UI:
 
-| ✅ Allowed | ❌ Not Allowed |
-|-----------|---------------|
-| Input validation (format, length) | Hardcoded API calls |
-| Animation and transitions | Direct data fetching |
-| Local component state | Store mutations |
-| Event emission | Hardcoded URLs or endpoints |
-| Prop-based rendering | Authentication/authorization checks |
-| Accessibility features | Domain-specific calculations |
-| Configurable callbacks via props | Inflexible business rules |
-| Generic event handlers | Hardcoded configuration |
+| ✅ Dozwolone | ❌ Niedozwolone |
+|-------------|----------------|
+| Walidacja inputów (format, długość) | Zakodowane na sztywno wywołania API |
+| Animacje i przejścia | Bezpośrednie pobieranie danych |
+| Lokalny stan komponentu | Mutacje store |
+| Emitowanie zdarzeń | Zakodowane na sztywno URL-e lub endpointy |
+| Renderowanie oparte na propsach | Sprawdzanie autoryzacji/uwierzytelniania |
+| Funkcje dostępności | Obliczenia specyficzne dla domeny |
+| Konfigurowalne callbacki przez propsy | Nieelastyczne reguły biznesowe |
+| Generyczne handlery zdarzeń | Zakodowana na sztywno konfiguracja |
 
-**Business logic belongs in:**
-- Stores (Pinia)
+**Logika biznesowa należy do:**
+- Store'ów (Pinia)
 - Composables
-- Services
+- Serwisów
 
-### Exceptions
+### Wyjątki
 
-Nucleify extends the original Atomic Design with dedicated modules that **are allowed to contain business logic**:
+Nucleify rozszerza oryginalny Atomic Design o dedykowane moduły, które **mogą zawierać logikę biznesową**:
 
-| Module | Purpose |
-|--------|---------|
-| `nuc_templates` | Reusable templates for individual components (cards, forms, modals) |
-| `nuc_sections` | Page sections with layout logic, data handling, section-specific behavior |
-| `nuc_pages` | Full page components with API calls, store access, business rules |
+| Moduł | Przeznaczenie |
+|-------|---------------|
+| `nuc_templates` | Szablony wielokrotnego użytku dla pojedynczych komponentów (karty, formularze, modale) |
+| `nuc_sections` | Sekcje stron z logiką layoutu, obsługą danych, zachowaniem specyficznym dla sekcji |
+| `nuc_pages` | Pełne komponenty stron z wywołaniami API, dostępem do store'ów, regułami biznesowymi |
 
-These modules were intentionally separated from `nuxt/atomic/` because they serve as integration points where UI meets application logic. By isolating business logic here, all other atomic components remain pure, and reusable.
+Te moduły zostały celowo oddzielone od `nuxt/atomic/`, ponieważ służą jako punkty integracji, gdzie UI spotyka się z logiką aplikacji. Izolując logikę biznesową tutaj, wszystkie pozostałe komponenty atomowe pozostają czyste i wielokrotnego użytku.
 
 ---
 
-## The Hierarchy
+## Hierarchia
 
-Nucleify extends the original Atomic Design with an additional layer called **Bosons** for types and utilities.
+Nucleify rozszerza oryginalny Atomic Design o dodatkową warstwę zwaną **Bosons** dla typów i narzędzi.
 
 ```txt
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                                       Bosons                                           │
-│                      Types, utilities, constants (invisible layer)                     │
+│                      Typy, narzędzia, stałe (niewidoczna warstwa)                      │
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                                        Atoms                                           │
-│                        Basic UI elements (Button, Input, Icon)                         │
+│                      Podstawowe elementy UI (Button, Input, Icon)                      │
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                                      Molecules                                         │
-│                    Simple combinations of atoms (FloatLabel, Tile)                     │
+│                    Proste kombinacje atomów (FloatLabel, Tile)                         │
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                                      Organisms                                         │
-│                     Complex UI sections (DataTable, Dialog, Menu)                      │
+│                    Złożone sekcje UI (DataTable, Dialog, Menu)                         │
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                              Templates  (nuc_templates)                                │
-│                   Reusable component templates (cards, forms, modals)                  │
+│                   Szablony komponentów (karty, formularze, modale)                     │
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                               Sections  (nuc_sections)                                 │
-│                    Page sections with layout and data handling                         │
+│                    Sekcje stron z logiką layoutu i obsługą danych                      │
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │                                 Pages  (nuc_pages)                                     │
-│                  Full pages with API calls, stores, business rules                     │
+│                 Pełne strony z wywołaniami API, store'ami, regułami                    │
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Bosons - The Invisible Foundation
+## Bosons - Niewidzialna podstawa
 
-Bosons are the smallest, indivisible pieces of reusable logic. They don't render anything but provide the foundation for all components.
+Bosons to najmniejsze, niepodzielne elementy logiki wielokrotnego użytku. Nie renderują niczego, ale stanowią fundament dla wszystkich komponentów.
 
-**What belongs in Bosons:**
-- TypeScript interfaces and types
-- Pure utility functions (no side effects)
-- Constants and enums
-- Component-specific helpers
+**Co należy do Bosons:**
+- Interfejsy i typy TypeScript
+- Czyste funkcje narzędziowe (bez efektów ubocznych)
+- Stałe i enumy
+- Helpery specyficzne dla komponentów
 
 ```typescript
 // types/interfaces.ts
@@ -126,17 +126,17 @@ export const BREAKPOINTS = {
 
 ---
 
-## Atoms - Basic Building Blocks
+## Atoms - Podstawowe elementy
 
-Atoms are the smallest visual components. They cannot be broken down further without losing their meaning.
+Atoms to najmniejsze wizualne komponenty. Nie można ich dalej rozłożyć bez utraty znaczenia.
 
-**Examples:** Button, Input, Icon, Label, Badge, Checkbox, Avatar
+**Przykłady:** Button, Input, Icon, Label, Badge, Checkbox, Avatar
 
-**What logic is allowed:**
-- Handling click/focus/hover events
-- Managing internal state (e.g., input value)
-- Applying conditional styles based on props
-- Emitting events to parent
+**Jaka logika jest dozwolona:**
+- Obsługa zdarzeń click/focus/hover
+- Zarządzanie wewnętrznym stanem (np. wartość inputa)
+- Stosowanie warunkowych stylów na podstawie propsów
+- Emitowanie zdarzeń do rodzica
 
 ```html
 <template>
@@ -183,31 +183,31 @@ defineEmits<{ click: [event: MouseEvent] }>()
 </style>
 ```
 
-**Folder structure:**
+**Struktura folderów:**
 
 ```txt
 atomic/atom/button/
-├── index.vue            # Component
-├── index.ts             # Exports
-├── _index.scss          # Styles (optional)
+├── index.vue            # Komponent
+├── index.ts             # Eksporty
+├── _index.scss          # Style (opcjonalne)
 └── types/
     ├── index.ts
     ├── interfaces.ts
-    └── variables.ts     # Type literals
+    └── variables.ts     # Literały typów
 ```
 
 ---
 
-## Molecules - Simple Combinations
+## Molecules - Proste kombinacje
 
-Molecules combine atoms into functional units. They have a single responsibility and are still relatively simple.
+Molecules łączą atomy w funkcjonalne jednostki. Mają jedną odpowiedzialność i są nadal stosunkowo proste.
 
-**Examples:** FloatLabel, Anchor, Tile
+**Przykłady:** FloatLabel, Anchor, Tile
 
-**What logic is allowed:**
-- Coordinating child atom states
-- Simple computed values
-- Local validation (format only, not business rules)
+**Jaka logika jest dozwolona:**
+- Koordynowanie stanów atomów-dzieci
+- Proste wartości computed
+- Lokalna walidacja (tylko format, nie reguły biznesowe)
 
 ```html
 <template>
@@ -232,12 +232,12 @@ const inputId = computed(() => props.id || `input-${Math.random()}`)
 </script>
 ```
 
-**When to create a molecule:**
-- Two or more atoms always appear together
-- The combination has specific interaction logic
-- It represents a single, cohesive UI function
+**Kiedy tworzyć molekułę:**
+- Dwa lub więcej atomów zawsze występują razem
+- Kombinacja ma specyficzną logikę interakcji
+- Reprezentuje pojedynczą, spójną funkcję UI
 
-**Folder structure:**
+**Struktura folderów:**
 
 ```txt
 nuxt/atomic/molecule/
@@ -252,22 +252,22 @@ nuxt/atomic/molecule/
 
 ---
 
-## Organisms - Complex Structures
+## Organisms - Złożone struktury
 
-Organisms are complex UI sections composed of molecules, atoms, or other organisms. They are still **presentation-only** components.
+Organisms to złożone sekcje UI składające się z molekuł, atomów lub innych organizmów. Są nadal komponentami **tylko prezentacyjnymi**.
 
-**Examples:** DataTable, Dialog, Menu, Card, Accordion, Navbar
+**Przykłady:** DataTable, Dialog, Menu, Card, Accordion, Navbar
 
-**What logic is allowed:**
-- Rendering data passed via props
-- Local filtering/sorting of provided data
-- Managing open/closed states
-- Emitting events for user actions
+**Jaka logika jest dozwolona:**
+- Renderowanie danych przekazanych przez propsy
+- Lokalne filtrowanie/sortowanie dostarczonych danych
+- Zarządzanie stanami otwarte/zamknięte
+- Emitowanie zdarzeń dla akcji użytkownika
 
-**What is NOT allowed:**
-- Fetching data from APIs
-- Direct store access
-- Business rule validation
+**Co NIE jest dozwolone:**
+- Pobieranie danych z API
+- Bezpośredni dostęp do store'ów
+- Walidacja reguł biznesowych
 
 ```html
 <template>
@@ -307,14 +307,14 @@ Organisms are complex UI sections composed of molecules, atoms, or other organis
 <script setup lang="ts">
 import type { DataTableInterface } from './types'
 
-// ✓ Props for data - component doesn't fetch anything
+// ✓ Propsy dla danych - komponent nic nie pobiera
 const props = defineProps<DataTableInterface>()
 
-// ✓ Local UI state only
+// ✓ Tylko lokalny stan UI
 const searchQuery = ref('')
 const currentPage = ref(1)
 
-// ✓ Local filtering - no business logic
+// ✓ Lokalne filtrowanie - brak logiki biznesowej
 const filteredData = computed(() =>
   props.data.filter(row =>
     Object.values(row).some(v =>
@@ -323,12 +323,12 @@ const filteredData = computed(() =>
   )
 )
 
-// ✓ Emit events - let parent handle business logic
+// ✓ Emituj zdarzenia - rodzic obsługuje logikę biznesową
 defineEmits<{ 'page-change': [page: number] }>()
 </script>
 ```
 
-**Folder structure:**
+**Struktura folderów:**
 
 ```txt
 nuxt/atomic/organism/
@@ -347,9 +347,9 @@ nuxt/atomic/organism/
 
 ## Templates
 
-Templates are reusable component wrappers for cards, forms, modals, and other structured layouts. Business logic is allowed here.
+Templates to szablony komponentów wielokrotnego użytku dla kart, formularzy, modali i innych strukturalnych layoutów. Logika biznesowa jest tutaj dozwolona.
 
-**Location:** `modules/nuc_templates/`
+**Lokalizacja:** `modules/nuc_templates/`
 
 ```html
 <template>
@@ -367,7 +367,7 @@ Templates are reusable component wrappers for cards, forms, modals, and other st
 </template>
 ```
 
-**Folder structure:**
+**Struktura folderów:**
 
 ```txt
 modules/nuc_templates/
@@ -388,9 +388,9 @@ modules/nuc_templates/
 
 ## Sections
 
-Sections are page-level building blocks with layout logic and data handling. They compose templates and organisms into meaningful page areas.
+Sections to bloki budulcowe na poziomie strony z logiką layoutu i obsługą danych. Komponują szablony i organizmy w znaczące obszary strony.
 
-**Location:** `modules/nuc_sections/`
+**Lokalizacja:** `modules/nuc_sections/`
 
 ```html
 <template>
@@ -406,19 +406,19 @@ Sections are page-level building blocks with layout logic and data handling. The
 <script setup lang="ts">
 import type { HeroSectionInterface } from './types'
 
-// ✓ Business logic allowed in sections
+// ✓ Logika biznesowa dozwolona w sekcjach
 const props = defineProps<HeroSectionInterface>()
 
 const emit = defineEmits<{ action: [] }>()
 
 function handleAction() {
-  // Can contain business logic
+  // Może zawierać logikę biznesową
   emit('action')
 }
 </script>
 ```
 
-**Folder structure:**
+**Struktura folderów:**
 
 ```txt
 modules/nuc_sections/
@@ -439,14 +439,14 @@ modules/nuc_sections/
 
 ## Pages
 
-Pages are where **business logic lives**. They connect UI components with stores, APIs, and application state.
+Pages to miejsce, gdzie **żyje logika biznesowa**. Łączą komponenty UI ze store'ami, API i stanem aplikacji.
 
-| Part | Location | Purpose |
-|------|----------|---------|
-| Route definition | `nuxt/pages/` | Nuxt routing (minimal wrapper) |
-| Page content | `modules/nuc_pages/pages/` | Business logic + component composition |
+| Część | Lokalizacja | Przeznaczenie |
+|-------|-------------|---------------|
+| Definicja route'a | `nuxt/pages/` | Routing Nuxt (minimalny wrapper) |
+| Zawartość strony | `modules/nuc_pages/pages/` | Logika biznesowa + kompozycja komponentów |
 
-**Route file** (`nuxt/pages/dashboard.vue`):
+**Plik route'a** (`nuxt/pages/dashboard.vue`):
 
 ```html
 <template>
@@ -454,7 +454,7 @@ Pages are where **business logic lives**. They connect UI components with stores
 </template>
 ```
 
-**Page component** (`modules/nuc_pages/pages/Dashboard/index.vue`):
+**Komponent strony** (`modules/nuc_pages/pages/Dashboard/index.vue`):
 
 ```html
 <template>
@@ -463,7 +463,7 @@ Pages are where **business logic lives**. They connect UI components with stores
       <navigation-menu :items="menuItems" />
     </template>
 
-    <!-- ✓ Data passed to presentation component -->
+    <!-- ✓ Dane przekazane do komponentu prezentacyjnego -->
     <ad-data-table
       :data="users"
       :columns="columns"
@@ -473,21 +473,21 @@ Pages are where **business logic lives**. They connect UI components with stores
 </template>
 
 <script setup lang="ts">
-// ✓ Business logic lives here
+// ✓ Logika biznesowa żyje tutaj
 const userStore = useUserStore()
 const { users, fetchUsers } = userStore
 
-// ✓ API calls in pages
+// ✓ Wywołania API w stronach
 onMounted(() => fetchUsers())
 
-// ✓ Business logic handlers
+// ✓ Handlery logiki biznesowej
 function handlePageChange(page: number) {
   fetchUsers({ page })
 }
 </script>
 ```
 
-**Folder structure:**
+**Struktura folderów:**
 
 ```txt
 modules/nuc_pages/
@@ -505,40 +505,40 @@ modules/nuc_pages/
 
 ---
 
-## Component Naming Conventions
+## Konwencje nazewnictwa komponentów
 
-All atomic components use the `ad-` prefix (Atomic Design):
+Wszystkie komponenty atomowe używają prefiksu `ad-` (Atomic Design):
 
-| Level | Naming | Example |
-|-------|--------|---------|
-| Atom | `ad-{name}` | `<ad-button>`, `<ad-icon>` |
-| Molecule | `ad-{name}` | `<ad-float-label>`, `<ad-tile>` |
-| Organism | `ad-{name}` | `<ad-data-table>`, `<ad-dialog>` |
-| Template | `nuc-{module}-{name}` | `<nuc-auth-template>` |
-| Page | `nuc-{module}-page` | `<nuc-dashboard-page>` |
+| Poziom | Nazewnictwo | Przykład |
+|--------|-------------|----------|
+| Atom | `ad-{nazwa}` | `<ad-button>`, `<ad-icon>` |
+| Molecule | `ad-{nazwa}` | `<ad-float-label>`, `<ad-tile>` |
+| Organism | `ad-{nazwa}` | `<ad-data-table>`, `<ad-dialog>` |
+| Template | `nuc-{moduł}-{nazwa}` | `<nuc-auth-template>` |
+| Page | `nuc-{moduł}-page` | `<nuc-dashboard-page>` |
 
 ---
 
-## Best Practices
+## Najlepsze praktyki
 
-### 1. Keep Components Pure
+### 1. Utrzymuj komponenty czyste
 
-Components should be predictable - same props always produce same output:
+Komponenty powinny być przewidywalne - te same propsy zawsze produkują ten sam output:
 
 ```html
-<!-- ✓ Good: Pure presentation -->
+<!-- ✓ Dobrze: Czysta prezentacja -->
 <ad-user-card :user="user" @follow="$emit('follow', user.id)" />
 
-<!-- ✗ Bad: Side effects inside component -->
-<ad-user-card :userId="userId" />  <!-- fetches user internally -->
+<!-- ✗ Źle: Efekty uboczne wewnątrz komponentu -->
+<ad-user-card :userId="userId" />  <!-- pobiera użytkownika wewnętrznie -->
 ```
 
-### 2. Props Down, Events Up
+### 2. Props w dół, Events w górę
 
-Components receive data via props and communicate changes via events:
+Komponenty otrzymują dane przez propsy i komunikują zmiany przez zdarzenia:
 
 ```html
-<!-- Parent handles business logic -->
+<!-- Rodzic obsługuje logikę biznesową -->
 <ad-select
   v-model="selectedOption"
   :options="options"
@@ -546,21 +546,21 @@ Components receive data via props and communicate changes via events:
 />
 ```
 
-### 3. Single Responsibility
+### 3. Pojedyncza odpowiedzialność
 
-Each component should do one thing well:
+Każdy komponent powinien robić jedną rzecz dobrze:
 
 ```html
-<!-- ✓ Good: Focused component -->
+<!-- ✓ Dobrze: Skoncentrowany komponent -->
 <ad-avatar :src="user.avatar" :size="'lg'" />
 
-<!-- ✗ Bad: Too many responsibilities -->
+<!-- ✗ Źle: Zbyt wiele odpowiedzialności -->
 <user-card-with-avatar-and-actions-and-menu />
 ```
 
-### 4. Use TypeScript Interfaces
+### 4. Używaj interfejsów TypeScript
 
-Always define prop interfaces for type safety:
+Zawsze definiuj interfejsy propsów dla bezpieczeństwa typów:
 
 ```typescript
 // types/interfaces.ts
@@ -574,4 +574,3 @@ export interface CardInterface {
 // types/variables.ts
 export type CardVariant = 'default' | 'outlined' | 'elevated'
 ```
-
