@@ -17,8 +17,9 @@ export const DOC_CATEGORIES: DocCategoryInterface[] = [
     order: 2,
     pages: [
       { slug: 'atomic-design', title: 'Atomic Design', order: 1 },
-      { slug: 'modules', title: 'Modules', order: 2 },
-      { slug: 'overriding', title: 'Overriding', order: 3 },
+      { slug: 'feature-sliced-design', title: 'Feature Sliced Design', order: 2 },
+      { slug: 'modules', title: 'Modules', order: 3 },
+      { slug: 'overriding', title: 'Overriding', order: 4 },
     ],
   },
   {
