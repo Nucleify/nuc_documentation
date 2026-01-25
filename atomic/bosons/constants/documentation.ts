@@ -36,4 +36,14 @@ export const DOC_CATEGORIES: DocCategoryInterface[] = [
       { slug: 'laravel', title: 'Laravel', order: 3 },
     ],
   },
+  {
+    name: 'Tests',
+    slug: 'tests',
+    order: 4,
+    pages: [
+      { slug: 'pest', title: 'Pest', order: 1 },
+      { slug: 'vitest', title: 'Vitest', order: 2 },
+      { slug: 'storybook', title: 'Storybook', order: 3 },
+    ],
+  },
 ]

@@ -1,0 +1,450 @@
+# Pest (Testowanie Backendu)
+
+Pest to framework do testowania PHP używany do testów backendowych w Nucleify.
+
+---
+
+## Konfiguracja
+
+### phpunit.xml
+
+```xml
+<phpunit bootstrap="vendor/autoload.php" colors="true">
+    <testsuites>
+        <testsuite name="Modules">
+          <directory>modules</directory>
+        </testsuite>
+        <testsuite name="Global">
+          <directory>tests/Global</directory>
+        </testsuite>
+        <testsuite name="Database">
+          <directory>tests/Database</directory>
+        </testsuite>
+        <testsuite name="Feature">
+          <directory>tests/Feature</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
+```
+
+### Zmienne środowiskowe
+
+| Zmienna | Wartość | Opis |
+|---------|---------|------|
+| `APP_ENV` | `testing` | Środowisko aplikacji |
+| `CACHE_DRIVER` | `array` | Cache w pamięci |
+| `DB_TEST_DATABASE` | `testing` | Nazwa testowej bazy danych |
+| `SESSION_DRIVER` | `array` | Sesje w pamięci |
+
+---
+
+## Struktura
+
+### Testy globalne
+
+```txt
+tests/
+├── Pest.php              # Główna konfiguracja
+├── Groups.php            # Grupy testów
+├── Uses.php              # Wspólne uses
+├── Global/               # Testy globalne
+├── Feature/              # Testy funkcjonalne
+└── Database/             # Testy bazy danych
+```
+
+### Testy modułów
+
+```txt
+modules/nuc_example/tests/
+├── Pest.php              # Konfiguracja modułu
+├── TestConstants.php     # Dane testowe
+├── TestGroups.php        # Grupy modułu
+├── Database/
+│   ├── Factories/
+│   ├── Migrations/
+│   └── Models/
+└── Feature/
+    ├── Api/
+    │   └── User/
+    │       ├── HTTP200Test.php
+    │       ├── HTTP302Test.php
+    │       ├── HTTP401Test.php
+    │       ├── HTTP422PostTest.php
+    │       └── HTTP500Test.php
+    └── Controllers/
+```
+
+---
+
+## Konfiguracja Pest
+
+### Groups.php
+
+```php
+<?php
+
+uses()
+    ->group('database')
+    ->in('Database');
+
+uses()
+    ->group('models')
+    ->in('Database/Models');
+
+uses()
+    ->group('api')
+    ->in('Feature/Api');
+
+uses()
+    ->group('controllers')
+    ->in('Feature/Controllers');
+
+uses()
+    ->group('modules')
+    ->in('../modules');
+```
+
+### Uses.php
+
+```php
+<?php
+
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
+
+uses(TestCase::class)->in('Feature', 'Database');
+uses(DatabaseMigrations::class)->in('Database/Factories', 'Feature/Controllers');
+```
+
+---
+
+## Pisanie testów
+
+### Wzorzec Guard
+
+Każdy plik testowy musi zaczynać się od:
+
+```php
+<?php
+
+if (!defined('PEST_RUNNING')) {
+    return;
+}
+```
+
+### Testy API (HTTP 200)
+
+```php
+<?php
+
+if (!defined('PEST_RUNNING')) {
+    return;
+}
+
+uses()->group('user-api-200');
+
+use App\Models\User;
+
+beforeEach(function (): void {
+    $this->createUsers();
+    $this->actingAs($this->admin);
+});
+
+describe('200', function (): void {
+    test('index api', function (): void {
+        $this->getJson(route('users.index'))->assertOk();
+    });
+
+    test('store api', function (): void {
+        $this->postJson(route('users.store'), userData)->assertOk();
+    });
+
+    test('show api', function (): void {
+        $model = User::factory()->create();
+        $this->getJson(route('users.show', $model->id))->assertOk();
+    });
+
+    test('destroy api', function (): void {
+        $model = User::factory()->create();
+        $this->deleteJson(route('users.destroy', $model->id))->assertOk();
+        $this->assertDatabaseMissing('users', ['id' => $model->id]);
+    });
+});
+```
+
+### Testy walidacji (HTTP 422)
+
+```php
+<?php
+
+if (!defined('PEST_RUNNING')) {
+    return;
+}
+
+uses()->group('api-422-post');
+
+beforeEach(function (): void {
+    $this->createUsers();
+    $this->actingAs($this->admin);
+});
+
+describe('422 > POST', function ($userData = userData) {
+    $userData['name'] = '';
+    test('name > empty', apiTest(
+        'POST',
+        'users.store',
+        422,
+        $userData,
+        ['errors' => ['name']],
+        ['errors' => [
+            'name' => ['The name field is required.']
+        ]]
+    ));
+
+    $userData['email'] = 'invalid';
+    test('email > invalid', apiTest(
+        'POST',
+        'users.store',
+        422,
+        $userData,
+        ['errors' => ['email']],
+        ['errors' => [
+            'email' => ['The email field must be a valid email address.']
+        ]]
+    ));
+});
+```
+
+### Testy modeli
+
+```php
+<?php
+
+if (!defined('PEST_RUNNING')) {
+    return;
+}
+
+uses()->group('user-model');
+
+use App\Models\User;
+
+beforeEach(function (): void {
+    $this->createUsers();
+    $this->model = User::factory()->create();
+});
+
+test('można utworzyć', function (): void {
+    expect($this->model)->toBeInstanceOf(User::class);
+});
+
+describe('Instancja', function (): void {
+    test('można pobrać id', function (): void {
+        expect($this->model->getId())
+            ->toBeInt()
+            ->toBe($this->model->id);
+    });
+
+    test('można sprawdzić czy admin', function (): void {
+        $model = User::factory()->create(['role' => 'admin']);
+        expect($model->isAdmin())
+            ->toBeTrue();
+    });
+});
+
+describe('Scope', function (): void {
+    test('można filtrować po roli', function (): void {
+        $found = User::getByAdminRole()->first();
+        expect($found->role)->toBe('admin');
+    });
+});
+```
+
+### Testy kontrolerów
+
+```php
+<?php
+
+if (!defined('PEST_RUNNING')) {
+    return;
+}
+
+uses()->group('user-controller');
+
+use App\Http\Controllers\UserController;
+use App\Services\UserService;
+
+beforeEach(function (): void {
+    $this->createUsers();
+    $this->actingAs($this->admin);
+    $this->controller = app()->makeWith(
+        UserController::class,
+        ['userService' => app()->make(UserService::class)]
+    );
+});
+
+describe('200', function (): void {
+    test('metoda index', function (): void {
+        $response = $this->controller->index();
+        expect($response->getStatusCode())->toEqual(200);
+    });
+});
+```
+
+---
+
+## Funkcje pomocnicze
+
+### apiTest()
+
+Helper dla pojedynczego testu - zwraca Closure do użycia z `test()`.
+
+```php
+<?php
+
+function apiTest(
+    $method,
+    $route,
+    $status,
+    $data = null,
+    $jsonStructure = null,
+    $jsonFragment = null
+): Closure;
+```
+
+**Użycie:**
+
+```php
+test('name > empty', apiTest(
+    'POST',
+    'users.store',
+    422,
+    $userData,
+    ['errors' => ['name']],
+    ['errors' => [
+        'name' => ['The name field is required.']
+    ]]
+));
+```
+
+### apiTestArray()
+
+Generator wielu testów - tworzy testy z tablicy. Każdy test dostaje świeżą kopię `baseData` zmergowaną z `override`.
+
+```php
+<?php
+
+function apiTestArray(
+    string $method,
+    string $route,
+    array $baseData,
+    array $tests
+): void;
+```
+
+**Parametry:**
+
+| Parametr | Typ | Opis |
+|----------|-----|------|
+| `$method` | string | Metoda HTTP: GET, POST, PUT, DELETE, SHOW |
+| `$route` | string | Nazwa route'a |
+| `$baseData` | array | Bazowe dane - każdy test dostaje świeżą kopię |
+| `$tests` | array | Tablica definicji testów |
+
+**Opcje definicji testu:**
+
+| Klucz | Typ | Domyślnie | Opis |
+|-------|-----|-----------|------|
+| `status` | int | 422 | Oczekiwany status HTTP |
+| `override` | array | [] | Pola do nadpisania w baseData |
+| `structure` | array | null | assertJsonStructure |
+| `fragment` | array | null | assertJsonFragment |
+| `errors` | array | null | assertJsonValidationErrors |
+| `id` | int | 1 | ID dla PUT/DELETE/SHOW |
+
+**Użycie:**
+
+```php
+describe('422 > POST', function () {
+    apiTestArray('POST', 'contacts.store', contactData, [
+        'user_id > empty' => [
+            'override' => ['user_id' => ''],
+            'structure' => ['errors' => ['user_id']],
+            'fragment' => ['errors' => [
+                'user_id' => ['The user id field is required.']
+            ]],
+        ],
+        'user_id > string' => [
+            'override' => ['user_id' => 'invalid'],
+            'structure' => ['errors' => ['user_id']],
+            'fragment' => ['errors' => [
+                'user_id' => ['The user id field must be an integer.']
+            ]],
+        ],
+        'first_name > empty' => [
+            'override' => ['first_name' => ''],
+            'structure' => ['errors' => ['first_name']],
+            'fragment' => ['errors' => [
+                'first_name' => ['The first name field is required.']
+            ]],
+        ],
+        'first_name > too short' => [
+            'override' => ['first_name' => 'L'],
+            'structure' => ['errors' => ['first_name']],
+            'fragment' => ['errors' => [
+                'first_name' => ['The first name field must be at least 3 characters.']
+            ]],
+        ],
+        'email > invalid format' => [
+            'override' => ['email' => 'not-an-email'],
+            'structure' => ['errors' => ['email']],
+            'fragment' => ['errors' => [
+                'email' => ['The email field must be a valid email address.']
+            ]],
+        ],
+    ]);
+});
+```
+
+**Zalety:**
+- Każdy test dostaje świeżą kopię `baseData` (bez ręcznego resetowania)
+- Czystsza składnia dla wielu testów walidacji
+- Automatyczne nazwy testów z kluczy tablicy
+
+---
+
+## Komendy
+
+```bash
+# Uruchom wszystkie testy
+make test
+
+# Uruchom konkretny zestaw
+php artisan test --testsuite=Modules
+php artisan test --testsuite=Feature
+
+# Uruchom konkretną grupę
+php artisan test --group=api-200
+php artisan test --group=models
+
+# Uruchom konkretny plik
+php artisan test modules/nuc_entities/tests/Feature/Api/User/HTTP200Test.php
+
+# Uruchom z pokryciem kodu
+php artisan test --coverage
+
+# Filtruj po nazwie
+php artisan test --filter="store api"
+```
+
+---
+
+## Dobre praktyki
+
+1. **Zawsze dodawaj guard** - `if (!defined('PEST_RUNNING')) { return; }`
+2. **Używaj grup** - `uses()->group('name')`
+3. **Używaj `beforeEach`** - Wspólna konfiguracja
+4. **Używaj bloków `describe`** - Grupuj powiązane testy
+5. **Testuj wszystkie kody HTTP** - 200, 302, 401, 405, 422, 500
+6. **Testy modułów trzymaj** w `modules/*/tests/`
+7. **Używaj factories** - `Model::factory()->create()`
+8. **Sprawdzaj bazę danych** - `assertDatabaseHas()`, `assertDatabaseMissing()`
