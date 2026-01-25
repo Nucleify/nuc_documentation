@@ -348,6 +348,7 @@ function apiTestArray(array $tests): void;
 | `fragment` | array | null | assertJsonFragment |
 | `errors` | array | null | assertJsonValidationErrors |
 | `id` | int | null | ID dla route'a (wymagane dla SHOW/PUT/DELETE, opcjonalne dla GET/POST) |
+| `json` | bool | true | Użyj metod JSON (postJson, putJson) lub zwykłych (post, put) |
 
 **Użycie:**
 
