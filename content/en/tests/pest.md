@@ -328,77 +328,71 @@ test('name > empty', apiTest(
 
 ### apiTestArray()
 
-Batch test generator - creates multiple tests from an array. Each test gets a fresh copy of `baseData` merged with `override`.
+Batch test generator - creates multiple tests from an array.
 
 ```php
 <?php
 
-function apiTestArray(
-    string $method,
-    string $route,
-    array $baseData,
-    array $tests
-): void;
+function apiTestArray(array $tests): void;
 ```
-
-**Parameters:**
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `$method` | string | HTTP method: GET, POST, PUT, DELETE, SHOW |
-| `$route` | string | Route name |
-| `$baseData` | array | Base data - each test gets a fresh copy |
-| `$tests` | array | Array of test definitions |
 
 **Test definition options:**
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| `method` | string | 'POST' | HTTP method: GET, POST, PUT, DELETE, SHOW |
+| `route` | string | '' | Route name |
 | `status` | int | 422 | Expected HTTP status |
-| `override` | array | [] | Fields to override in baseData |
+| `data` | array | [] | Request data |
 | `structure` | array | null | assertJsonStructure |
 | `fragment` | array | null | assertJsonFragment |
 | `errors` | array | null | assertJsonValidationErrors |
-| `id` | int | 1 | ID for PUT/DELETE/SHOW |
+| `id` | int | null | ID for route (required for SHOW/PUT/DELETE, optional for GET/POST) |
 
 **Usage:**
 
 ```php
+describe('401', function () {
+    apiTestArray([
+        'index api' => [
+            'method' => 'GET',
+            'route' => 'contacts.index',
+            'status' => 401,
+            'structure' => ['message'],
+            'fragment' => ['message' => 'Unauthenticated.'],
+        ],
+        'show api' => [
+            'method' => 'SHOW',
+            'route' => 'contacts.show',
+            'status' => 401,
+            'id' => 1,
+        ],
+        'destroy api' => [
+            'method' => 'DELETE',
+            'route' => 'contacts.destroy',
+            'status' => 401,
+        ],
+    ]);
+});
+
 describe('422 > POST', function () {
-    apiTestArray('POST', 'contacts.store', contactData, [
+    apiTestArray([
         'user_id > empty' => [
-            'override' => ['user_id' => ''],
+            'method' => 'POST',
+            'route' => 'contacts.store',
+            'data' => ['user_id' => ''],
             'structure' => ['errors' => ['user_id']],
             'fragment' => ['errors' => [
                 'user_id' => ['The user id field is required.']
             ]],
         ],
-        'user_id > string' => [
-            'override' => ['user_id' => 'invalid'],
-            'structure' => ['errors' => ['user_id']],
-            'fragment' => ['errors' => [
-                'user_id' => ['The user id field must be an integer.']
-            ]],
-        ],
-        'first_name > empty' => [
-            'override' => ['first_name' => ''],
-            'structure' => ['errors' => ['first_name']],
-            'fragment' => ['errors' => [
-                'first_name' => ['The first name field is required.']
-            ]],
-        ],
         'first_name > too short' => [
-            'override' => ['first_name' => 'L'],
+            'method' => 'POST',
+            'route' => 'contacts.store',
+            'data' => ['first_name' => 'L'],
             'structure' => ['errors' => ['first_name']],
             'fragment' => ['errors' => [
                 'first_name' => ['The first name field must be at least 3 characters.']
-            ]],
-        ],
-        'email > invalid format' => [
-            'override' => ['email' => 'not-an-email'],
-            'structure' => ['errors' => ['email']],
-            'fragment' => ['errors' => [
-                'email' => ['The email field must be a valid email address.']
             ]],
         ],
     ]);
@@ -406,9 +400,9 @@ describe('422 > POST', function () {
 ```
 
 **Benefits:**
-- Each test gets a fresh copy of `baseData` (no manual reset needed)
-- Cleaner syntax for multiple validation tests
+- Cleaner syntax for multiple tests
 - Automatic test naming from array keys
+- All parameters per test
 
 ---
 
