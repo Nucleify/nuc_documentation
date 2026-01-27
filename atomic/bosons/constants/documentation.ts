@@ -46,4 +46,15 @@ export const DOC_CATEGORIES: DocCategoryInterface[] = [
       { slug: 'storybook', title: 'Storybook', order: 3 },
     ],
   },
+  {
+    name: 'About',
+    slug: 'about',
+    order: 5,
+    pages: [
+      { slug: 'philosophy', title: 'Philosophy', order: 1 },
+      { slug: 'coding-standards', title: 'Coding Standards', order: 2 },
+      { slug: 'code-of-conduct', title: 'Code of Conduct', order: 3 },
+      { slug: 'people-and-credits', title: 'People & Credits', order: 4 },
+    ],
+  },
 ]
