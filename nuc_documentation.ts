@@ -1,7 +1,9 @@
 import type { App } from 'vue'
-
-import { NucDocumentationPage } from './atomic'
+import { defineAsyncComponent, hydrateOnVisible } from 'vue'
 
 export function registerNucDocumentation(app: App<Element>): void {
-  app.component('nuc-documentation-page', NucDocumentationPage)
+  app.component('nuc-documentation-page', defineAsyncComponent({
+    loader: () => import('./atomic/pages/index.vue'),
+    hydrate: hydrateOnVisible({ rootMargin: '500px' }),
+  }))
 }
