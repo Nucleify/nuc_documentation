@@ -1,5 +1,7 @@
 <template>
   <div class="documentation-wrapper">
+    <nuc-grid-background />
+
     <nuc-section-navbar />
     <div class="documentation-container">
       <nuc-documentation-sidebar :categories="DOC_CATEGORIES" />
