@@ -222,7 +222,7 @@ Zaimportuj w komponencie:
 
 ## Następne Kroki
 
-- Dowiedz się więcej o [Modułach](/docs/core-concepts/modules) do organizacji funkcji
-- Poznaj metodologię [Atomic Design](/docs/core-concepts/atomic-design)
-- Przeczytaj [Standardy Kodu](/docs/contributing/code-standards) dla najlepszych praktyk
+- Dowiedz się więcej o [Modułach](/pl/docs/core-concepts/modules) do organizacji funkcji
+- Poznaj metodologię [Atomic Design](/pl/docs/core-concepts/atomic-design)
+- Przeczytaj [Standardy Kodu](/pl/docs/contributing/code-standards) dla najlepszych praktyk
 

@@ -138,7 +138,7 @@ If ports 80, 3000, or 3306 are in use, update `docker-compose.yml` or stop confl
 
 🎉 **Congratulations!** You're ready to build.
 
-1. **[Quick Start](/docs/getting-started/quick-start)** - Create your first component
-2. **[Modules Overview](/docs/modules/overview)** - Explore available modules
-3. **[Architecture](/docs/architecture/overview)** - Understand the system design
+1. **[Quick Start](/en/docs/getting-started/quick-start)** - Create your first component
+2. **[Modules Overview](/en/docs/modules/overview)** - Explore available modules
+3. **[Architecture](/en/docs/architecture/overview)** - Understand the system design
 

@@ -99,7 +99,7 @@ We welcome contributions of all kinds:
 - 📝 Documentation improvements
 - 🔧 Code contributions
 
-See our [Coding Standards](/docs/about/coding-standards) to get started.
+See our [Coding Standards](/en/docs/about/coding-standards) to get started.
 
 ---
 

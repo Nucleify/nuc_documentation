@@ -173,7 +173,7 @@ Overrides are automatically merged at build time, allowing you to:
 
 ## Next Steps
 
-1. **[Installation](/docs/getting-started/installation)** - Set up your development environment
-2. **[Quick Start](/docs/getting-started/quick-start)** - Create your first component
-3. **[Modules](/docs/modules/overview)** - Explore available modules
-4. **[Architecture](/docs/architecture/overview)** - Deep dive into system design
+1. **[Installation](/en/docs/getting-started/installation)** - Set up your development environment
+2. **[Quick Start](/en/docs/getting-started/quick-start)** - Create your first component
+3. **[Modules](/en/docs/modules/overview)** - Explore available modules
+4. **[Architecture](/en/docs/architecture/overview)** - Deep dive into system design

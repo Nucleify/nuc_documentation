@@ -173,8 +173,8 @@ Nadpisania są automatycznie scalane podczas budowania, co pozwala na:
 
 ## Następne kroki
 
-1. **[Instalacja](/docs/getting-started/installation)** - Skonfiguruj środowisko deweloperskie
-2. **[Szybki start](/docs/getting-started/quick-start)** - Stwórz swój pierwszy komponent
-3. **[Moduły](/docs/modules/overview)** - Odkryj dostępne moduły
-4. **[Architektura](/docs/architecture/overview)** - Głębokie zanurzenie w projektowanie systemu
+1. **[Instalacja](/pl/docs/getting-started/installation)** - Skonfiguruj środowisko deweloperskie
+2. **[Szybki start](/pl/docs/getting-started/quick-start)** - Stwórz swój pierwszy komponent
+3. **[Moduły](/pl/docs/modules/overview)** - Odkryj dostępne moduły
+4. **[Architektura](/pl/docs/architecture/overview)** - Głębokie zanurzenie w projektowanie systemu
 

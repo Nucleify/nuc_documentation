@@ -222,6 +222,6 @@ Import in your component:
 
 ## Next Steps
 
-- Learn about [Modules](/docs/core-concepts/modules) for organizing features
-- Explore [Atomic Design](/docs/core-concepts/atomic-design) methodology
-- Read [Code Standards](/docs/contributing/code-standards) for best practices
+- Learn about [Modules](/en/docs/core-concepts/modules) for organizing features
+- Explore [Atomic Design](/en/docs/core-concepts/atomic-design) methodology
+- Read [Code Standards](/en/docs/contributing/code-standards) for best practices
