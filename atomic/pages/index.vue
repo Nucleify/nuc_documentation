@@ -1,16 +1,10 @@
 <template>
   <div class="documentation-wrapper">
-    <nuc-grid-background />
-
     <nuc-section-navbar />
     <div class="documentation-container">
       <nuc-documentation-sidebar :categories="DOC_CATEGORIES" />
 
       <main v-if="content" class="documentation-content">
-        <div class="documentation-header">
-          <nuc-documentation-language-switcher />
-        </div>
-
         <!-- Hidden links for prerendering all language versions -->
         <nav aria-hidden="true" class="prerender-links">
           <NuxtLink
@@ -36,7 +30,7 @@
       />
     </div>
 
-    <div class="documentation-hexagons-container">
+    <div v-if="content" class="documentation-hexagons-container">
       <nuc-animation-hexagons />
     </div>
   </div>
@@ -53,7 +47,6 @@ import {
   getDocBasePath,
   loadDocContentClient,
   loadDocContentServer,
-  NucDocumentationLanguageSwitcher,
   NucDocumentationPagination,
   NucDocumentationSidebar,
   NucDocumentationToc,
