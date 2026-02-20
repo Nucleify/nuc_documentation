@@ -3,7 +3,19 @@ import { marked } from 'marked'
 
 import { slugify } from '.'
 
-import hljs from 'highlight.js'
+import hljs from 'highlight.js/lib/core'
+import bash from 'highlight.js/lib/languages/bash'
+import json from 'highlight.js/lib/languages/json'
+import php from 'highlight.js/lib/languages/php'
+import typescript from 'highlight.js/lib/languages/typescript'
+import xml from 'highlight.js/lib/languages/xml'
+
+hljs.registerLanguage('typescript', typescript)
+hljs.registerLanguage('php', php)
+hljs.registerLanguage('html', xml)
+hljs.registerLanguage('xml', xml)
+hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('json', json)
 
 const renderer = new marked.Renderer()
 
@@ -17,22 +29,24 @@ renderer.heading = (token: Tokens.Heading) => {
 
 renderer.code = (token: Tokens.Code) => {
   let highlightedCode = token.text
+  let hasHighlighting = false
 
   if (token.lang && hljs.getLanguage(token.lang)) {
     try {
-      highlightedCode = hljs.highlight(token.text, {
+      const result = hljs.highlight(token.text, {
         language: token.lang,
-      }).value
+      })
+      highlightedCode = result.value
+      hasHighlighting = true
     } catch (err) {
       console.error('Highlight.js error:', err)
-      highlightedCode = hljs.highlightAuto(token.text).value
+      highlightedCode = token.text
     }
-  } else {
-    highlightedCode = hljs.highlightAuto(token.text).value
   }
 
   const langClass = token.lang ? ` class="language-${token.lang}"` : ''
-  return `<pre><code${langClass}>${highlightedCode}</code></pre>`
+  const hljsClass = hasHighlighting ? ' hljs' : ''
+  return `<pre><code${langClass}${hljsClass}>${highlightedCode}</code></pre>`
 }
 
 marked.setOptions({
