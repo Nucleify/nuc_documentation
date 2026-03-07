@@ -52,7 +52,7 @@ import {
   NucDocumentationToc,
   parseDocPath,
   useHeadings,
-} from 'atomic'
+} from 'nucleify'
 
 const route = useRoute()
 

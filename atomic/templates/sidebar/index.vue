@@ -25,7 +25,11 @@
 import { useRoute } from 'nuxt/app'
 import { computed } from 'vue'
 
-import { type DocCategoryInterface, getDocBasePath, parseDocPath } from 'atomic'
+import {
+  type DocCategoryInterface,
+  getDocBasePath,
+  parseDocPath,
+} from 'nucleify'
 
 interface Props {
   categories: DocCategoryInterface[]

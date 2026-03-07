@@ -115,7 +115,7 @@ Gdy potrzebujesz użyć komponentów lub typów w script (nie template), importu
 
 ```html
 <script setup lang="ts">
-import { AdButton, type ButtonInterface } from 'atomic'
+import { AdButton, type ButtonInterface } from 'nucleify'
 
 // Użycie w logice script
 const buttonRef = ref<InstanceType<typeof AdButton>>()

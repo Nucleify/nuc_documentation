@@ -66,7 +66,7 @@ alias: {
 Wszystkie eksporty z tych katalogów są auto-importowane. Użyj aliasu `atomic`:
 
 ```typescript
-import { useAuth, type UserInterface } from 'atomic'
+import { useAuth, type UserInterface } from 'nucleify'
 ```
 
 ## Runtime Config

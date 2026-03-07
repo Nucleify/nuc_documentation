@@ -23,7 +23,7 @@
 import { useRoute } from 'nuxt/app'
 import { computed } from 'vue'
 
-import { DOC_CATEGORIES, getDocBasePath, parseDocPath } from 'atomic'
+import { DOC_CATEGORIES, getDocBasePath, parseDocPath } from 'nucleify'
 
 interface PaginationPage {
   category: string

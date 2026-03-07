@@ -115,11 +115,11 @@ export function mockGlobalFetch(
 
 ```typescript
 import { beforeEach, vi } from 'vitest'
-import * as atomic from 'atomic'
+import * as nucleify from 'nucleify'
 
 beforeEach((): void => {
   vi.clearAllMocks()
-  atomic.mockGlobalFetch(vi, mockResponse)
+  nucleify.mockGlobalFetch(vi, mockResponse)
 })
 ```
 
@@ -130,7 +130,7 @@ beforeEach((): void => {
 ```typescript
 // vitests/constants/api/user.ts
 
-import type { NucUserObjectInterface } from 'atomic'
+import type { NucUserObjectInterface } from 'nucleify'
 
 export const mockUser: NucUserObjectInterface = {
   id: 999999,
@@ -160,16 +160,16 @@ test('example', (): void => {
 
 ```typescript
 import { beforeEach, describe, expect, it, type Mock, vi } from 'vitest'
-import * as atomic from 'atomic'
+import * as nucleify from 'nucleify'
 
 describe('userRequests', (): void => {
-  const { closeDialog } = atomic.useNucDialog()
-  const requests = atomic.userRequests(closeDialog)
-  const mockResponse = [atomic.mockUser]
+  const { closeDialog } = nucleify.useNucDialog()
+  const requests = nucleify.userRequests(closeDialog)
+  const mockResponse = [nucleify.mockUser]
 
   beforeEach((): void => {
     vi.clearAllMocks()
-    atomic.mockGlobalFetch(vi, mockResponse)
+    nucleify.mockGlobalFetch(vi, mockResponse)
   })
 
   it('getAllUsers', async (): Promise<void> => {
@@ -184,7 +184,7 @@ describe('userRequests', (): void => {
   })
 
   it('storeUser', async (): Promise<void> => {
-    await requests.storeUser(atomic.mockUser)
+    await requests.storeUser(nucleify.mockUser)
     expect(
       (globalThis as unknown as { $fetch: Mock }).$fetch
     ).toHaveBeenCalledWith(
@@ -194,7 +194,7 @@ describe('userRequests', (): void => {
   })
 
   it('deleteUser', async (): Promise<void> => {
-    await requests.deleteUser(atomic.mockUser.id ?? 0)
+    await requests.deleteUser(nucleify.mockUser.id ?? 0)
     expect(
       (globalThis as unknown as { $fetch: Mock }).$fetch
     ).toHaveBeenCalledWith(
@@ -209,18 +209,18 @@ describe('userRequests', (): void => {
 
 ```typescript
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import * as atomic from 'atomic'
+import * as nucleify from 'nucleify'
 
 describe('useAddFriend', (): void => {
-  let instance: ReturnType<typeof atomic.useAddFriend>
+  let instance: ReturnType<typeof nucleify.useAddFriend>
 
   beforeEach((): void => {
     vi.clearAllMocks()
-    instance = atomic.useAddFriend()
+    instance = nucleify.useAddFriend()
   })
 
   it('should add friend', async (): Promise<void> => {
-    atomic.mockGlobalFetch(vi, [{ id: 1, name: 'Test' }])
+    nucleify.mockGlobalFetch(vi, [{ id: 1, name: 'Test' }])
     const spy = vi.spyOn(friendship, 'sendRequest')
 
     await instance.handleAddFriend()
@@ -336,7 +336,7 @@ npx vitest --update
 ## Best Practices
 
 1. **Use `atomic` alias** - Import from `nuxt/atomic`
-2. **Mock global fetch** - `atomic.mockGlobalFetch(vi, response)`
+2. **Mock global fetch** - `nucleify.mockGlobalFetch(vi, response)`
 3. **Clear mocks** - `vi.clearAllMocks()` in `beforeEach`
 4. **Use `describe` blocks** - Group related tests
 5. **Keep module tests** in `modules/*/vitests/`

@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DocHeadingInterface } from 'atomic'
+import type { DocHeadingInterface } from 'nucleify'
 
 interface DocumentationTocProps {
   headings: DocHeadingInterface[]
