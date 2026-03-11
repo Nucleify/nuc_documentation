@@ -167,7 +167,7 @@ Nadpisania są automatycznie scalane podczas budowania, co pozwala na:
 | **Frontend** | Nuxt 3, Vue 3, TypeScript, Pinia, PrimeVue 4 |
 | **Stylowanie** | SCSS, GSAP, Chart.js |
 | **DevOps** | Docker, Vite, Husky, Biome, TSC, Stylelint |
-| **Testowanie** | Pest, Vitest, Cypress, Storybook |
+| **Testowanie** | Pest, Vitest, Cypress |
 
 ---
 

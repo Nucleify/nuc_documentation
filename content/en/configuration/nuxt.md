@@ -211,17 +211,6 @@ Use icons with `i-prime` prefix:
 <Icon name="i-prime:check" />
 ```
 
-## Storybook
-
-```typescript
-storybook: {
-  url: 'http://localhost',
-  port: 6006,
-},
-```
-
-Available at `http://localhost:6006` after starting Nuxt.
-
 ## Laravel Sanctum
 
 ```typescript

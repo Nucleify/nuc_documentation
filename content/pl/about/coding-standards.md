@@ -90,7 +90,6 @@ modules/<nazwa_modulu>/
 <komponent>/
 ├── index.vue               # Główny komponent
 ├── index.ts                # Eksporty
-├── index.stories.ts        # Storybook (opcjonalnie)
 ├── _index.scss             # Style (opcjonalnie)
 └── types/
     ├── index.ts

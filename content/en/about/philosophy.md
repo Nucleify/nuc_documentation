@@ -110,7 +110,7 @@ Great DX isn't a luxury – it's a multiplier:
 - **Test behavior, not implementation** – What it does, not how
 - **High coverage for critical paths** – Auth, payments, data integrity
 - **Fast, reliable tests** – Slow tests don't get run
-- **Multiple layers** – Pest (backend), Vitest (frontend), Storybook (UI)
+- **Multiple layers** – Pest (backend), Vitest (frontend)
 
 ### Documentation Philosophy
 

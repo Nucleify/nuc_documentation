@@ -110,7 +110,7 @@ Nucleify dostarcza **94+ punktów PageSpeed** od razu:
 - **Testuj zachowanie, nie implementację** – Co robi, nie jak
 - **Wysokie pokrycie dla krytycznych ścieżek** – Auth, płatności, integralność danych
 - **Szybkie, niezawodne testy** – Wolne testy nie są uruchamiane
-- **Wiele warstw** – Pest (backend), Vitest (frontend), Storybook (UI)
+- **Wiele warstw** – Pest (backend), Vitest (frontend)
 
 ### Filozofia dokumentacji
 

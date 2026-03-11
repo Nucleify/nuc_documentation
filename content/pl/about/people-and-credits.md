@@ -58,7 +58,6 @@ Nucleify jest zbudowany na bazie niesamowitych projektów open source:
 | [Vue.js](https://vuejs.org) | Framework JavaScript |
 | [PrimeVue](https://primevue.org) | Biblioteka komponentów UI |
 | [Vitest](https://vitest.dev) | Framework testowy |
-| [Storybook](https://storybook.js.org) | Rozwój UI |
 
 ### Narzędzia
 
