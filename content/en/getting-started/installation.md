@@ -15,6 +15,7 @@ Before installing, ensure you have:
 | **Docker** | Latest | `docker --version` |
 | **Docker Compose** | Latest | `docker compose version` |
 | **Node.js** | 20.x+ | `node --version` |
+| **pnpm** | 9.x+ | `pnpm --version` |
 | **Composer** | 2.x | `composer --version` |
 | **Git** | Latest | `git --version` |
 
@@ -37,9 +38,9 @@ make
 
 **That's it!** ☕ Grab a coffee while Nucleify:
 
-- Copies environment configuration
+- Copies environment configuration from `.config/`
 - Installs PHP dependencies via Composer
-- Installs Node.js dependencies via npm
+- Installs Node.js dependencies via pnpm
 - Sets up Git hooks with Husky
 - Builds and starts Docker containers
 - Runs database migrations and seeders
@@ -51,12 +52,14 @@ make
 Under the hood, the `make` command executes:
 
 ```bash
-cp .env.docker.example .env                   # Environment config
+cp .config/.env.docker.example .env          # Environment config
 composer install                              # PHP dependencies
-npm install                                   # Node.js dependencies
-npm run prepare:husky                         # Git hooks
-./vendor/bin/sail up --build -d               # Docker containers
-./vendor/bin/sail art migrate:fresh --seed    # Database
+pnpm install                                  # Node.js dependencies
+cd next && pnpm install && cd ..              # Next.js (if used)
+pnpm prepare:husky                           # Git hooks
+./vendor/bin/sail up --build -d              # Docker containers
+bash .config/bash/wait-for-db.sh              # Wait for MySQL readiness
+./vendor/bin/sail art migrate:fresh --seed   # Database
 ```
 
 ---
@@ -81,13 +84,13 @@ If you prefer not to use Docker:
 
 ```bash
 composer install
-npm install
+pnpm install
 ```
 
 ### 2. Configure Environment
 
 ```bash
-cp .env.example .env
+cp .config/.env.docker.example .env
 php artisan key:generate
 ```
 
@@ -106,12 +109,21 @@ php artisan migrate:fresh --seed
 php artisan serve
 
 # Terminal 2: Nuxt
-npm run dev
+pnpm run dev
 ```
 
 ---
 
 ## Troubleshooting
+
+### Database Not Ready (Manual Setup)
+
+If you run `sail up` and migrate separately, MySQL may not be ready yet. Run:
+
+```bash
+bash .config/bash/wait-for-db.sh
+sail art migrate:fresh --seed
+```
 
 ### Docker Issues
 
@@ -130,7 +142,7 @@ sudo chown -R $USER:$USER .
 
 ### Port Conflicts
 
-If ports 80, 3000, or 3306 are in use, update `docker-compose.yml` or stop conflicting services.
+If ports 80, 3000, or 3306 are in use, update `.config/docker-compose.yml` or stop conflicting services.
 
 ---
 

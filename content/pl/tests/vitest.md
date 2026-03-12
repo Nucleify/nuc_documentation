@@ -15,7 +15,7 @@ import { resolve } from 'path'
 export default defineVitestConfig({
   resolve: {
     alias: {
-      atomic: resolve(__dirname, 'nuxt/atomic'),
+      nucleify: resolve(__dirname, 'nuxt/atomic'),
     },
   },
   test: {
@@ -307,35 +307,35 @@ expect({ a: 1 }).objectContaining({ a: 1 })
 
 ```bash
 # Uruchom wszystkie testy
-make vitest
+pnpm run tests
 
 # Tryb watch
-npx vitest
+pnpm run test:watch
 
 # Uruchom raz
-npx vitest run
+pnpm run tests
 
 # Konkretny plik
-npx vitest modules/nuc_entities/vitests/api/User/200.test.ts
+pnpm exec vitest modules/nuc_entities/vitests/api/User/200.test.ts
 
 # Z wzorcem
-npx vitest --filter="userRequests"
+pnpm exec vitest --filter="userRequests"
 
 # Z coverage
-npx vitest --coverage
+pnpm run test:coverage
 
 # Z UI
-npx vitest --ui
+pnpm exec vitest --ui
 
 # Aktualizuj snapshoty
-npx vitest --update
+pnpm exec vitest --update
 ```
 
 ---
 
 ## Dobre praktyki
 
-1. **Używaj aliasu `atomic`** - Importuj z `nuxt/atomic`
+1. **Używaj aliasu `nucleify`** - Importuj z `nuxt/atomic`
 2. **Mockuj global fetch** - `nucleify.mockGlobalFetch(vi, response)`
 3. **Czyść mocki** - `vi.clearAllMocks()` w `beforeEach`
 4. **Używaj bloków `describe`** - Grupuj powiązane testy

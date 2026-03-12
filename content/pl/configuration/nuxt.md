@@ -1,6 +1,6 @@
 # Konfiguracja Nuxt
 
-Konfiguracja frontendu w `nuxt.config.ts`.
+Konfiguracja frontendu w `.config/nuxt.config.ts`, reeksportowana z root `nuxt.config.ts`.
 
 ## SSR i Prerendering
 
@@ -59,11 +59,11 @@ imports: {
   dirs: ['~/composables/**', '~/atomic/**', 'modules/**'],
 },
 alias: {
-  atomic: '~/atomic',
+  nucleify: '~/atomic',
 },
 ```
 
-Wszystkie eksporty z tych katalogów są auto-importowane. Użyj aliasu `atomic`:
+Wszystkie eksporty z tych katalogów są auto-importowane. Użyj aliasu `nucleify`:
 
 ```typescript
 import { useAuth, type UserInterface } from 'nucleify'

@@ -1,6 +1,8 @@
 # Environment Variables
 
-Nucleify uses environment variables for configuration. Copy `.env.example` to `.env` and configure.
+Nucleify uses environment variables for configuration. Copy `.config/.env.docker.example` to `.env` and configure.
+
+Config files (phpunit, pint, stylelint, nuxt, docker-compose, etc.) live in `.config/`. Root files extend or include them.
 
 ## Required Variables
 
@@ -67,6 +69,15 @@ QUEUE_CONNECTION=sync
 ```
 
 For production, consider using `redis` for cache, session, and queue.
+
+## Netlify Deployment
+
+When deploying the Nuxt frontend to Netlify with pnpm:
+
+- **`.npmrc`** – The project includes `public-hoist-pattern[]=*` so Vue and other modules resolve correctly during the Netlify build.
+- **`netlify.toml`** – Uses `PNPM_FLAGS = "--shamefully-hoist"` for compatibility with Nuxt on Netlify's build environment.
+
+These settings address the "Could not resolve entry module vue" error that can occur with pnpm's default module layout.
 
 ## Example `.env`
 

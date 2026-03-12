@@ -8,21 +8,16 @@ Pest is the PHP testing framework used for backend testing in Nucleify.
 
 ### phpunit.xml
 
+Configuration lives in `.config/phpunit.xml`. Root `phpunit.xml` does not exist—Sail and `composer test` use it automatically via the custom Sail wrapper.
+
 ```xml
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<!-- .config/phpunit.xml -->
+<phpunit bootstrap="../vendor/autoload.php" colors="true">
     <testsuites>
-        <testsuite name="Modules">
-          <directory>modules</directory>
-        </testsuite>
-        <testsuite name="Global">
-          <directory>tests/Global</directory>
-        </testsuite>
-        <testsuite name="Database">
-          <directory>tests/Database</directory>
-        </testsuite>
-        <testsuite name="Feature">
-          <directory>tests/Feature</directory>
-        </testsuite>
+        <testsuite name="Modules"><directory>../modules</directory></testsuite>
+        <testsuite name="Global"><directory>../tests/Global</directory></testsuite>
+        <testsuite name="Database"><directory>../tests/Database</directory></testsuite>
+        <testsuite name="Feature"><directory>../tests/Feature</directory></testsuite>
     </testsuites>
 </phpunit>
 ```
@@ -410,25 +405,28 @@ describe('422 > POST', function () {
 ## Commands
 
 ```bash
-# Run all tests
-make test
+# Run all tests (Docker)
+sail pest
+
+# Run all tests (local)
+composer test
 
 # Run specific suite
-php artisan test --testsuite=Modules
-php artisan test --testsuite=Feature
+sail pest --testsuite=Modules
+sail pest --testsuite=Feature
 
 # Run specific group
-php artisan test --group=api-200
-php artisan test --group=models
+sail pest --group=api-200
+sail pest --group=models
 
 # Run specific file
-php artisan test modules/nuc_entities/tests/Feature/Api/User/HTTP200Test.php
+sail pest modules/nuc_entities/tests/Feature/Api/User/HTTP200Test.php
 
 # Run with coverage
-php artisan test --coverage
+sail pest --coverage
 
 # Filter by name
-php artisan test --filter="store api"
+sail pest --filter="store api"
 ```
 
 ---

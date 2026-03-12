@@ -1,6 +1,6 @@
 # Nuxt Configuration
 
-Frontend configuration in `nuxt.config.ts`.
+Frontend configuration in `.config/nuxt.config.ts`, re-exported from root `nuxt.config.ts`.
 
 ## SSR & Prerendering
 
@@ -59,11 +59,11 @@ imports: {
   dirs: ['~/composables/**', '~/atomic/**', 'modules/**'],
 },
 alias: {
-  atomic: '~/atomic',
+  nucleify: '~/atomic',
 },
 ```
 
-All exports from these directories are auto-imported. Use `atomic` alias:
+All exports from these directories are auto-imported. Use `nucleify` alias:
 
 ```typescript
 import { useAuth, type UserInterface } from 'nucleify'

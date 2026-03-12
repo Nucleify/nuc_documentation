@@ -8,21 +8,16 @@ Pest to framework do testowania PHP używany do testów backendowych w Nucleify.
 
 ### phpunit.xml
 
+Konfiguracja znajduje się w `.config/phpunit.xml`. W root nie ma pliku `phpunit.xml`—Sail i `composer test` korzystają z niej automatycznie przez własny wrapper Sail.
+
 ```xml
-<phpunit bootstrap="vendor/autoload.php" colors="true">
+<!-- .config/phpunit.xml -->
+<phpunit bootstrap="../vendor/autoload.php" colors="true">
     <testsuites>
-        <testsuite name="Modules">
-          <directory>modules</directory>
-        </testsuite>
-        <testsuite name="Global">
-          <directory>tests/Global</directory>
-        </testsuite>
-        <testsuite name="Database">
-          <directory>tests/Database</directory>
-        </testsuite>
-        <testsuite name="Feature">
-          <directory>tests/Feature</directory>
-        </testsuite>
+        <testsuite name="Modules"><directory>../modules</directory></testsuite>
+        <testsuite name="Global"><directory>../tests/Global</directory></testsuite>
+        <testsuite name="Database"><directory>../tests/Database</directory></testsuite>
+        <testsuite name="Feature"><directory>../tests/Feature</directory></testsuite>
     </testsuites>
 </phpunit>
 ```
@@ -410,25 +405,28 @@ describe('422 > POST', function () {
 ## Komendy
 
 ```bash
-# Uruchom wszystkie testy
-make test
+# Uruchom wszystkie testy (Docker)
+sail pest
+
+# Uruchom wszystkie testy (lokalnie)
+composer test
 
 # Uruchom konkretny zestaw
-php artisan test --testsuite=Modules
-php artisan test --testsuite=Feature
+sail pest --testsuite=Modules
+sail pest --testsuite=Feature
 
 # Uruchom konkretną grupę
-php artisan test --group=api-200
-php artisan test --group=models
+sail pest --group=api-200
+sail pest --group=models
 
 # Uruchom konkretny plik
-php artisan test modules/nuc_entities/tests/Feature/Api/User/HTTP200Test.php
+sail pest modules/nuc_entities/tests/Feature/Api/User/HTTP200Test.php
 
 # Uruchom z pokryciem kodu
-php artisan test --coverage
+sail pest --coverage
 
 # Filtruj po nazwie
-php artisan test --filter="store api"
+sail pest --filter="store api"
 ```
 
 ---

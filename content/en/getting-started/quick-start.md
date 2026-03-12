@@ -107,11 +107,11 @@ Components in `nuxt/atomic/` are **automatically registered** by Nuxt with the `
 **How it works:**
 - Components from `atom/`, `molecule/`, `organism/` folders are scanned automatically
 - Each component gets the `ad-` prefix (e.g., `button/index.vue` → `<ad-button>`)
-- Types and utilities from `atomic` alias are also auto-imported
+- Types and utilities from `nucleify` alias are also auto-imported
 
 ### Explicit Imports
 
-When you need to use components or types in script (not template), import from `atomic`:
+When you need to use components or types in script (not template), import from `nucleify`:
 
 ```html
 <script setup lang="ts">

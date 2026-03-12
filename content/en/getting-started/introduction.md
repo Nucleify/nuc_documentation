@@ -167,7 +167,7 @@ Overrides are automatically merged at build time, allowing you to:
 | **Frontend** | Nuxt 3, Vue 3, TypeScript, Pinia, PrimeVue 4 |
 | **Styling** | SCSS, GSAP, Chart.js |
 | **DevOps** | Docker, Vite, Husky, Biome, TSC, Stylelint |
-| **Testing** | Pest, Vitest, Cypress |
+| **Testing** | Pest, Vitest |
 
 ---
 

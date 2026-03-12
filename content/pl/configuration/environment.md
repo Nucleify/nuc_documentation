@@ -1,6 +1,8 @@
 # Zmienne środowiskowe
 
-Nucleify używa zmiennych środowiskowych do konfiguracji. Skopiuj `.env.example` do `.env` i skonfiguruj.
+Nucleify używa zmiennych środowiskowych do konfiguracji. Skopiuj `.config/.env.docker.example` do `.env` i skonfiguruj.
+
+Pliki konfiguracyjne (phpunit, pint, stylelint, nuxt, docker-compose itd.) znajdują się w `.config/`. Pliki w root rozszerzają lub dołączają je.
 
 ## Wymagane zmienne
 
@@ -67,6 +69,15 @@ QUEUE_CONNECTION=sync
 ```
 
 Na produkcji rozważ użycie `redis` dla cache, sesji i kolejki.
+
+## Wdrożenie na Netlify
+
+Przy wdrażaniu frontendu Nuxt na Netlify z pnpm:
+
+- **`.npmrc`** – Projekt zawiera `public-hoist-pattern[]=*`, dzięki czemu Vue i inne moduły są poprawnie rozwiązywane podczas buildu na Netlify.
+- **`netlify.toml`** – Używa `PNPM_FLAGS = "--shamefully-hoist"` dla zgodności z Nuxt w środowisku buildu Netlify.
+
+Te ustawienia rozwiązują błąd „Could not resolve entry module vue” występujący przy domyślnym układzie modułów pnpm.
 
 ## Przykład `.env`
 

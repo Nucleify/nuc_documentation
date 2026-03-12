@@ -107,11 +107,11 @@ Komponenty w `nuxt/atomic/` są **automatycznie rejestrowane** przez Nuxt z pref
 **Jak to działa:**
 - Komponenty z folderów `atom/`, `molecule/`, `organism/` są skanowane automatycznie
 - Każdy komponent dostaje prefix `ad-` (np. `button/index.vue` → `<ad-button>`)
-- Typy i narzędzia z aliasu `atomic` są również auto-importowane
+- Typy i narzędzia z aliasu `nucleify` są również auto-importowane
 
 ### Jawne Importy
 
-Gdy potrzebujesz użyć komponentów lub typów w script (nie template), importuj z `atomic`:
+Gdy potrzebujesz użyć komponentów lub typów w script (nie template), importuj z `nucleify`:
 
 ```html
 <script setup lang="ts">

@@ -15,6 +15,7 @@ Przed instalacją upewnij się, że masz:
 | **Docker** | Najnowsza | `docker --version` |
 | **Docker Compose** | Najnowsza | `docker compose version` |
 | **Node.js** | 20.x+ | `node --version` |
+| **pnpm** | 9.x+ | `pnpm --version` |
 | **Composer** | 2.x | `composer --version` |
 | **Git** | Najnowsza | `git --version` |
 
@@ -37,9 +38,9 @@ make
 
 **To wszystko!** ☕ Napij się kawy, podczas gdy Nucleify:
 
-- Kopiuje konfigurację środowiska
+- Kopiuje konfigurację środowiska z `.config/`
 - Instaluje zależności PHP przez Composer
-- Instaluje zależności Node.js przez npm
+- Instaluje zależności Node.js przez pnpm
 - Konfiguruje hooki Git z Husky
 - Buduje i uruchamia kontenery Docker
 - Wykonuje migracje i seedery bazy danych
@@ -51,12 +52,14 @@ make
 Pod spodem komenda `make` wykonuje:
 
 ```bash
-cp .env.docker.example .env                   # Konfiguracja środowiska
+cp .config/.env.docker.example .env           # Konfiguracja środowiska
 composer install                              # Zależności PHP
-npm install                                   # Zależności Node.js
-npm run prepare:husky                         # Hooki Git
-./vendor/bin/sail up --build -d               # Kontenery Docker
-./vendor/bin/sail art migrate:fresh --seed    # Baza danych
+pnpm install                                  # Zależności Node.js
+cd next && pnpm install && cd ..              # Next.js (jeśli używany)
+pnpm prepare:husky                           # Hooki Git
+./vendor/bin/sail up --build -d              # Kontenery Docker
+bash .config/bash/wait-for-db.sh              # Oczekiwanie na gotowość MySQL
+./vendor/bin/sail art migrate:fresh --seed   # Baza danych
 ```
 
 ---
@@ -81,13 +84,13 @@ Jeśli wolisz nie używać Dockera:
 
 ```bash
 composer install
-npm install
+pnpm install
 ```
 
 ### 2. Skonfiguruj Środowisko
 
 ```bash
-cp .env.example .env
+cp .config/.env.docker.example .env
 php artisan key:generate
 ```
 
@@ -106,12 +109,21 @@ php artisan migrate:fresh --seed
 php artisan serve
 
 # Terminal 2: Nuxt
-npm run dev
+pnpm run dev
 ```
 
 ---
 
 ## Rozwiązywanie Problemów
+
+### Baza Nie Jest Gotowa (Instalacja Manualna)
+
+Jeśli uruchamiasz `sail up` i migracje oddzielnie, MySQL może nie być jeszcze gotowe. Uruchom:
+
+```bash
+bash .config/bash/wait-for-db.sh
+sail art migrate:fresh --seed
+```
 
 ### Problemy z Dockerem
 
@@ -130,7 +142,7 @@ sudo chown -R $USER:$USER .
 
 ### Konflikty Portów
 
-Jeśli porty 80, 3000 lub 3306 są zajęte, zaktualizuj `docker-compose.yml` lub zatrzymaj konfliktujące usługi.
+Jeśli porty 80, 3000 lub 3306 są zajęte, zaktualizuj `.config/docker-compose.yml` lub zatrzymaj konfliktujące usługi.
 
 ---
 
