@@ -59,9 +59,9 @@
     }
 
     &.active {
-      color: var(--main-item-hover-color-system);
+      color: $main-hover-color-system;
       background: rgb(255 255 255 / 8%);
-      border-left-color: var(--main-item-hover-color-system);
+      border-left-color: $main-hover-color-system;
     }
   }
 }

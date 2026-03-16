@@ -78,7 +78,7 @@
     }
 
     a {
-      color: var(--main-item-hover-color-system);
+      color: $main-hover-color-system;
       text-decoration: underline;
       text-underline-offset: 2px;
 
@@ -124,7 +124,7 @@
     }
 
     blockquote {
-      border-left: 4px solid var(--main-item-hover-color-system);
+      border-left: 4px solid $main-hover-color-system;
       padding: 0.5rem 0 0.5rem 1.5rem;
       margin: 1.5rem 0;
       background: rgb(255 255 255 / 3%);

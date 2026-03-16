@@ -49,6 +49,6 @@ function getPageUrl(categorySlug: string, pageSlug: string): string {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import 'index';
 </style>

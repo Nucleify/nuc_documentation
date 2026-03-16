@@ -45,7 +45,7 @@
     }
 
     .pagination-arrow {
-      color: var(--main-item-hover-color-system);
+      color: $main-hover-color-system;
     }
 
     .hexagon-rows-container .hexagon-row-container {
@@ -53,11 +53,11 @@
     }
 
     &:hover {
-      background: var(--main-item-highlight-color-system);
-      border-color: var(--main-item-hover-color-system);
+      background: $main-highlight-color-system;
+      border-color: $main-hover-color-system;
 
       .pagination-title {
-        color: var(--main-item-hover-color-system);
+        color: $main-hover-color-system;
       }
     }
   }
@@ -66,10 +66,9 @@
     flex: 1;
   }
 
-  @media (width <= $md) {
+  @media (width <=$md) {
     width: 100%;
     display: grid;
     grid-template-columns: 2fr 2fr;
   }
 }
-
