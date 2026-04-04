@@ -19,10 +19,19 @@ hljs.registerLanguage('json', json)
 
 const renderer = new marked.Renderer()
 
+const headingSlugCount = new Map<string, number>()
+
+export function resetHeadingSlugCounters(): void {
+  headingSlugCount.clear()
+}
+
 renderer.heading = (token: Tokens.Heading) => {
   const level = token.depth
   const text = token.text
-  const id = slugify(text)
+  const base = slugify(text)
+  const n = headingSlugCount.get(base) ?? 0
+  headingSlugCount.set(base, n + 1)
+  const id = n === 0 ? base : `${base}-${n}`
   const tag = `h${level}`
   return `<${tag} id="${id}">${text}</${tag}>`
 }

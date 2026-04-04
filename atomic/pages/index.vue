@@ -17,7 +17,7 @@
         </nav>
         <div
           ref="contentRef"
-          v-sanitize-html="content"
+          v-sanitize-html:documentation="content"
           class="doc-content"
         />
         <nuc-documentation-pagination />
@@ -129,8 +129,6 @@ async function loadContent(path: string, scrollTop = false): Promise<void> {
     if (scrollTop) {
       window.scrollTo({ top: 0, behavior: 'instant' })
     }
-
-    nextTick(() => setupScrollTriggers(contentRef.value))
   } catch (e) {
     console.error('Failed to load doc:', e)
   }
@@ -150,18 +148,31 @@ onBeforeRouteUpdate(async (to) => {
   await loadContent(to.path, true)
 })
 
+if (import.meta.client) {
+  watch(
+    [content, contentRef],
+    async ([c, el]) => {
+      if (!c || !el) return
+      await nextTick()
+      await nextTick()
+      setupScrollTriggers(el)
+    },
+    { flush: 'post', immediate: true }
+  )
+}
+
 onMounted(async () => {
   if (!contentState.value) {
     await loadContent(route.path)
   }
 
-  nextTick(() => {
-    setupScrollTriggers(contentRef.value)
+  await nextTick()
+  await nextTick()
+  if (contentRef.value) setupScrollTriggers(contentRef.value)
 
-    if (window.location.hash) {
-      scrollToHeading(window.location.hash.slice(1))
-    }
-  })
+  if (window.location.hash) {
+    scrollToHeading(window.location.hash.slice(1))
+  }
 })
 </script>
 

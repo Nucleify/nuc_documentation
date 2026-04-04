@@ -1,9 +1,4 @@
-import { gsap } from 'gsap'
 import { onUnmounted, ref } from 'vue'
-
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
 
 export interface UseHeadingsInterface {
   activeHeadingId: ReturnType<typeof ref<string>>
@@ -12,97 +7,124 @@ export interface UseHeadingsInterface {
   cleanupScrollTriggers: () => void
 }
 
+const SEL = 'h2, h3, h4, h5, h6'
+const LINE = 160
+
 export function useHeadings(): UseHeadingsInterface {
   const activeHeadingId = ref('')
-  const scrollTriggers: ScrollTrigger[] = []
-  let isScrolling = false
+  let root: HTMLElement | null = null
+  let heads: HTMLElement[] = []
+  let raf = 0
+  const unsubs: (() => void)[] = []
+  let mo: MutationObserver | null = null
+  const seen = new Set<EventTarget>()
+
+  function pull(): void {
+    heads = root
+      ? Array.from(root.querySelectorAll<HTMLElement>(SEL)).filter((h) => h.id)
+      : []
+  }
+
+  function apply(): void {
+    if (!heads.length) return
+    let cur = heads[0]
+    for (const h of heads) {
+      if (h.getBoundingClientRect().top > LINE) break
+      cur = h
+    }
+    if (cur.id !== activeHeadingId.value) activeHeadingId.value = cur.id
+  }
+
+  function schedule(): void {
+    if (!raf)
+      raf = requestAnimationFrame(() => {
+        raf = 0
+        apply()
+      })
+  }
+
+  function bind(t: EventTarget): void {
+    if (seen.has(t)) return
+    seen.add(t)
+    t.addEventListener('scroll', schedule, { passive: true })
+    unsubs.push(() => {
+      t.removeEventListener('scroll', schedule)
+      seen.delete(t)
+    })
+  }
+
+  function teardown(): void {
+    if (raf) cancelAnimationFrame(raf)
+    raf = 0
+    mo?.disconnect()
+    mo = null
+    unsubs.forEach((u) => u())
+    unsubs.length = 0
+    seen.clear()
+    heads = []
+    root = null
+  }
 
   function scrollToHeading(id: string): void {
-    const element = document.getElementById(id)
-    if (!element) return
-
-    isScrolling = true
+    const el = document.getElementById(id)
+    if (!el) return
     activeHeadingId.value = id
-    history.replaceState(null, '', `#${id}`)
-
-    const offset = 100
-    const position =
-      element.getBoundingClientRect().top + window.scrollY - offset
-
-    window.scrollTo({ top: position, behavior: 'smooth' })
-
-    setTimeout(() => {
-      isScrolling = false
-    }, 1000)
+    el.scrollIntoView({ block: 'start', behavior: 'auto' })
+    requestAnimationFrame(() => requestAnimationFrame(apply))
   }
 
   function setupScrollTriggers(contentRef: HTMLElement | null): void {
-    cleanupScrollTriggers()
+    teardown()
+    root = contentRef
     if (!contentRef) return
 
-    const headingElements = Array.from(
-      contentRef.querySelectorAll<HTMLElement>('h2, h3, h4, h5, h6')
-    ).filter((el) => el.id)
+    bind(window)
+    bind(document)
+    document.documentElement && bind(document.documentElement)
+    document.scrollingElement && bind(document.scrollingElement)
+    const vv = window.visualViewport
+    if (vv) {
+      vv.addEventListener('scroll', schedule, { passive: true })
+      unsubs.push(() => vv.removeEventListener('scroll', schedule))
+    }
+    for (let p: HTMLElement | null = contentRef; p; p = p.parentElement) {
+      const { overflowY } = getComputedStyle(p)
+      if (
+        /(auto|scroll|overlay)/.test(overflowY) &&
+        p.scrollHeight > p.clientHeight + 1
+      ) {
+        bind(p)
+      }
+    }
 
-    if (!headingElements.length) return
+    const sync = (): void => {
+      pull()
+      if (!heads.length) {
+        activeHeadingId.value = ''
+        return
+      }
+      apply()
+    }
 
-    const VIEWPORT_OFFSET = 150
-
-    headingElements.forEach((element, index) => {
-      const isLast = index === headingElements.length - 1
-      const nextElement = headingElements[index + 1]
-
-      const endPosition = isLast
-        ? `+=${contentRef.scrollHeight - element.offsetTop}`
-        : `+=${nextElement.offsetTop - element.offsetTop - 1}`
-
-      scrollTriggers.push(
-        ScrollTrigger.create({
-          trigger: element,
-          start: `top ${VIEWPORT_OFFSET}px`,
-          end: endPosition,
-          onToggle: (self) => {
-            if (self.isActive && !isScrolling) {
-              activeHeadingId.value = element.id
-            }
-          },
-        })
-      )
+    sync()
+    mo = new MutationObserver(() => {
+      pull()
+      if (!heads.length) activeHeadingId.value = ''
+      else apply()
     })
-
-    ScrollTrigger.refresh()
-    setInitialActiveHeading(headingElements)
+    mo.observe(contentRef, { childList: true, subtree: true })
+    requestAnimationFrame(() => {
+      sync()
+      if (!heads.length) queueMicrotask(sync)
+    })
   }
 
-  function setInitialActiveHeading(headingElements: HTMLElement[]): void {
-    if (window.scrollY < 100 && headingElements[0]?.id) {
-      activeHeadingId.value = headingElements[0].id
-      return
-    }
-
-    const VIEWPORT_OFFSET = 150
-    const activeElement =
-      [...headingElements]
-        .reverse()
-        .find((el) => el.getBoundingClientRect().top <= VIEWPORT_OFFSET) ||
-      headingElements[0]
-
-    if (activeElement?.id) {
-      activeHeadingId.value = activeElement.id
-    }
-  }
-
-  function cleanupScrollTriggers(): void {
-    scrollTriggers.forEach((trigger) => trigger.kill())
-    scrollTriggers.length = 0
-  }
-
-  onUnmounted(cleanupScrollTriggers)
+  onUnmounted(teardown)
 
   return {
     activeHeadingId,
     scrollToHeading,
     setupScrollTriggers,
-    cleanupScrollTriggers,
+    cleanupScrollTriggers: teardown,
   }
 }
