@@ -1,5 +1,6 @@
-import { DEFAULT_LANG } from '../constants/languages'
 import type { DocPathInfoInterface } from '../types'
+
+import { DEFAULT_LANG } from '../constants/languages'
 import { isValidDocLang } from './is_valid_doc_lang'
 
 export function parseDocPath(path: string): DocPathInfoInterface | null {

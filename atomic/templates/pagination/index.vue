@@ -90,4 +90,3 @@ function getPageUrl(categorySlug: string, pageSlug: string): string {
 <style lang="scss">
 @import 'index';
 </style>
-

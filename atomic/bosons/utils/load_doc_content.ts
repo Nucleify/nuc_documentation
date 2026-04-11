@@ -1,5 +1,6 @@
-import { DEFAULT_LANG } from '../constants/languages'
 import type { DocHeadingInterface } from '../types'
+
+import { DEFAULT_LANG } from '../constants/languages'
 import { parseHeadings } from './parse_headings'
 import { parseMarkdown } from './parse_markdown'
 

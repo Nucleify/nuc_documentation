@@ -17,7 +17,7 @@
         </nav>
         <div
           ref="contentRef"
-          v-sanitize-html:documentation="content"
+          v-html:documentation="content"
           class="doc-content"
         />
         <nuc-documentation-pagination />
