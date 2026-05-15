@@ -15,11 +15,7 @@
             {{ lang.name }}
           </NuxtLink>
         </nav>
-        <div
-          ref="contentRef"
-          v-html:documentation="content"
-          class="doc-content"
-        />
+        <div ref="contentRef" v-html="content" class="doc-content" />
         <nuc-documentation-pagination />
       </main>
 

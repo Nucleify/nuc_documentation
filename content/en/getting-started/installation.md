@@ -58,7 +58,6 @@ pnpm install                                  # Node.js dependencies
 cd next && pnpm install && cd ..              # Next.js (if used)
 pnpm prepare:husky                           # Git hooks
 ./vendor/bin/sail up --build -d              # Docker containers
-bash .config/bash/wait-for-db.sh              # Wait for MySQL readiness
 ./vendor/bin/sail art migrate:fresh --seed   # Database
 ```
 
@@ -115,15 +114,6 @@ pnpm run dev
 ---
 
 ## Troubleshooting
-
-### Database Not Ready (Manual Setup)
-
-If you run `sail up` and migrate separately, MySQL may not be ready yet. Run:
-
-```bash
-bash .config/bash/wait-for-db.sh
-sail art migrate:fresh --seed
-```
 
 ### Docker Issues
 
