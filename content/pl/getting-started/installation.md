@@ -1,147 +1,56 @@
 # Instalacja
 
-## Gotowe w Mniej niż 5 Minut
+## Gotowe w mniej niż 5 minut
 
-Nucleify został zaprojektowany z myślą o natychmiastowej produktywności. Jedną komendą otrzymasz w pełni skonfigurowane środowisko deweloperskie - z backendem Laravel, frontendem Nuxt i bazą danych.
+Nucleify to frontend **Nuxt 3** lub **Next.js** z backendem **Supabase**. Jedna komenda `make` kopiuje konfigurację, instaluje zależności i uruchamia serwer deweloperski.
 
 ---
 
 ## Wymagania
 
-Przed instalacją upewnij się, że masz:
-
-| Wymaganie | Wersja | Komenda sprawdzająca |
-|-----------|--------|---------------------|
-| **Docker** | Najnowsza | `docker --version` |
-| **Docker Compose** | Najnowsza | `docker compose version` |
+| Wymaganie | Wersja | Komenda |
+|-----------|--------|---------|
 | **Node.js** | 20.x+ | `node --version` |
 | **pnpm** | 9.x+ | `pnpm --version` |
-| **Composer** | 2.x | `composer --version` |
-| **Git** | Najnowsza | `git --version` |
+| **Git** | Najnowszy | `git --version` |
+| **Supabase CLI** | Najnowszy (baza) | `supabase --version` |
+
+Potrzebny jest projekt Supabase ([supabase.com](https://supabase.com)) lub lokalna instancja (`supabase start`).
 
 ---
 
-## Instalacja Jedną Komendą
-
-### 1. Sklonuj Repozytorium
+## Instalacja jedną komendą
 
 ```bash
 git clone https://github.com/Nucleify/Nucleify.git
 cd Nucleify
-```
-
-### 2. Uruchom Magiczną Komendę
-
-```bash
-make
-```
-
-**To wszystko!** ☕ Napij się kawy, podczas gdy Nucleify:
-
-- Kopiuje konfigurację środowiska z `.config/`
-- Instaluje zależności PHP przez Composer
-- Instaluje zależności Node.js przez pnpm
-- Konfiguruje hooki Git z Husky
-- Buduje i uruchamia kontenery Docker
-- Wykonuje migracje i seedery bazy danych
-
----
-
-## Co Robi Komenda make?
-
-Pod spodem komenda `make` wykonuje:
-
-```bash
-cp .config/.env.docker.example .env           # Konfiguracja środowiska
-composer install                              # Zależności PHP
-pnpm install                                  # Zależności Node.js
-cd next && pnpm install && cd ..              # Next.js (jeśli używany)
-pnpm prepare:husky                           # Hooki Git
-./vendor/bin/sail up --build -d              # Kontenery Docker
-./vendor/bin/sail art migrate:fresh --seed   # Baza danych
+make nuxt    # lub: make next
 ```
 
 ---
 
-## Dostęp do Aplikacji
+## Baza danych
 
-Po zakończeniu konfiguracji aplikacja jest gotowa:
+Po uzupełnieniu `.env` kluczami Supabase:
+
+```bash
+bash .config/bash/apply-module-migrations.sh
+bash .config/bash/apply-module-sql.sh seeders
+```
+
+---
+
+## Adresy
 
 | Usługa | URL |
 |--------|-----|
-| **Frontend (Nuxt)** | `http://localhost:3000` |
-| **Backend (Laravel)** | `http://localhost` |
-| **Baza danych (MySQL)** | `http://localhost:3306` |
+| **Nuxt** | `http://localhost:3000` |
+| **API** | `http://localhost:3000/api/test` |
 
 ---
 
-## Instalacja Manualna (Alternatywa)
+## Dalej
 
-Jeśli wolisz nie używać Dockera:
-
-### 1. Zainstaluj Zależności
-
-```bash
-composer install
-pnpm install
-```
-
-### 2. Skonfiguruj Środowisko
-
-```bash
-cp .config/.env.docker.example .env
-php artisan key:generate
-```
-
-### 3. Konfiguracja Bazy Danych
-
-Skonfiguruj bazę danych w `.env`, następnie:
-
-```bash
-php artisan migrate:fresh --seed
-```
-
-### 4. Uruchom Serwery Deweloperskie
-
-```bash
-# Terminal 1: Laravel
-php artisan serve
-
-# Terminal 2: Nuxt
-pnpm run dev
-```
-
----
-
-## Rozwiązywanie Problemów
-
-### Problemy z Dockerem
-
-Jeśli kontenery nie uruchamiają się:
-
-```bash
-docker compose down -v
-make
-```
-
-### Problemy z Uprawnieniami (Linux/Mac)
-
-```bash
-sudo chown -R $USER:$USER .
-```
-
-### Konflikty Portów
-
-Jeśli porty 80, 3000 lub 3306 są zajęte, zaktualizuj `.config/docker-compose.yml` lub zatrzymaj konfliktujące usługi.
-
----
-
-## Następne Kroki
-
-🎉 **Gratulacje!** Jesteś gotowy do budowania.
-
-1. **[Szybki Start](/pl/docs/getting-started/quick-start)** - Stwórz swój pierwszy komponent
-2. **[Przegląd Modułów](/pl/docs/modules/overview)** - Poznaj dostępne moduły
-3. **[Architektura](/pl/docs/architecture/overview)** - Zrozum projektowanie systemu
-
-
+1. **[Supabase](/pl/docs/configuration/supabase)** — Jak działa backend
+2. **[Szybki start](/pl/docs/getting-started/quick-start)**
+3. **[Moduły](/pl/docs/core-concepts/modules)**

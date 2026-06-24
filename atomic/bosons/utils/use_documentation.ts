@@ -1,6 +1,10 @@
-import { DOC_CATEGORIES } from '../constants/documentation'
-import { DEFAULT_LANG } from '../constants/languages'
-import { parseMarkdown } from './parse_markdown'
+import {
+  DEFAULT_LANG,
+  DOC_CATEGORIES,
+  DocPageInterface,
+  fetchDocMarkdownApi,
+  parseMarkdown,
+} from 'nucleify'
 
 export interface UseDocumentationInterface {
   prefetchFirstPage: (lang?: string) => Promise<void>
@@ -12,19 +16,13 @@ export function useDocumentation(): UseDocumentationInterface {
     const firstCategory = DOC_CATEGORIES[0]
     const firstPage = firstCategory.pages[0]
 
-    await $fetch<string>(
-      appUrl() +
-        `/modules/nuc_documentation/content/${lang}/${firstCategory.slug}/${firstPage.slug}.md`
-    )
+    await fetchDocMarkdownApi(lang, firstCategory.slug, firstPage.slug)
   }
 
   async function prefetchAll(lang: string = DEFAULT_LANG): Promise<void> {
     const requests = DOC_CATEGORIES.flatMap((category) =>
-      category.pages.map((page) =>
-        $fetch<string>(
-          appUrl() +
-            `/modules/nuc_documentation/content/${lang}/${category.slug}/${page.slug}.md`
-        ).then(parseMarkdown)
+      category.pages.map((page: DocPageInterface) =>
+        fetchDocMarkdownApi(lang, category.slug, page.slug).then(parseMarkdown)
       )
     )
 

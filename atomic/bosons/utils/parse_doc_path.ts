@@ -1,7 +1,5 @@
-import type { DocPathInfoInterface } from '../types'
-
-import { DEFAULT_LANG } from '../constants/languages'
-import { isValidDocLang } from './is_valid_doc_lang'
+import type { DocPathInfoInterface } from 'nucleify'
+import { DEFAULT_LANG, isValidDocLang } from 'nucleify'
 
 export function parseDocPath(path: string): DocPathInfoInterface | null {
   if (!path) return null

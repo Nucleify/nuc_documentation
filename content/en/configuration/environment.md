@@ -1,105 +1,71 @@
 # Environment Variables
 
-Nucleify uses environment variables for configuration. Copy `.config/.env.docker.example` to `.env` and configure.
+Nucleify reads configuration from `.env` at the repo root. Use `.config/.env.nuxt.example` or `.config/.env.next.example` as a template (`make nuxt` / `make next` copies it automatically).
 
-Config files (phpunit, pint, stylelint, nuxt, docker-compose, etc.) live in `.config/`. Root files extend or include them.
+Config for Nuxt lives in `.config/nuxt/` and is merged in `.config/nuxt.config.ts`.
 
-## Required Variables
+## Required (Supabase)
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `APP_URL` | Application URL | `http://localhost:8000` |
-| `APP_ENV` | Environment | `local`, `production` |
-| `APP_KEY` | Laravel encryption key | `base64:...` |
-| `DB_CONNECTION` | Database driver | `mysql`, `pgsql`, `sqlite` |
-| `DB_DATABASE` | Database name | `nucleify` |
+| `SUPABASE_URL` | Supabase project URL | `https://xxx.supabase.co` |
+| `SUPABASE_KEY` | Anon/public key (browser-safe) | `eyJhbG…` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role (server only) | `eyJhbG…` |
 
-## Frontend Variables
+Never expose `SUPABASE_SERVICE_ROLE_KEY` in client bundles or public repos.
+
+## Application
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `API_URL` | API endpoint URL | `${APP_URL}/api` |
-| `SSR` | Enable server-side rendering | `true` |
+| `APP_NAME` | App name | `Nucleify` |
+| `APP_ENV` | Environment | `local` |
+| `APP_DEBUG` | Verbose errors | `true` |
+| `APP_FRONTEND` | Active stack | `nuxt` or `next` |
+| `NUXT_PUBLIC_APP_URL` | Public URL (Nuxt) | `http://localhost:3000` |
 
-## SSR & Prerendering
+## SSR & Prerendering (Nuxt)
 
 ```env
 SSR=true
-PRERENDER_ROUTES=/,/home,/docs
+PRERENDER_ROUTES=/home,/dev,/login,/docs
 PRERENDER_CRAWL_LINKS=true
-PRERENDER_IGNORE=/admin,/login
+PRERENDER_IGNORE=/settings
+PRERENDER_LOCALES=en,pl,vn
+NITRO_PRESET=cloudflare
 ```
 
 | Variable | Description |
 |----------|-------------|
-| `SSR` | Enable/disable SSR |
+| `SSR` | Enable server-side rendering |
 | `PRERENDER_ROUTES` | Comma-separated routes to prerender |
-| `PRERENDER_CRAWL_LINKS` | Auto-discover links during prerender |
-| `PRERENDER_IGNORE` | Routes to skip during prerender |
+| `PRERENDER_CRAWL_LINKS` | Discover links during prerender |
+| `PRERENDER_IGNORE` | Routes to skip |
+| `NITRO_PRESET` | Nitro deploy target |
 
-## Database
+## Optional
 
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=nucleify
-DB_USERNAME=root
-DB_PASSWORD=secret
-```
+| Variable | Description |
+|----------|-------------|
+| `SUPABASE_EDGE_BASE` | Edge Functions base URL |
+| `NUC_CONVERT_DOCUMENTS_URL` | External document conversion service |
+| `DEV_TOOLS` | Enable Nuxt devtools |
 
-## Mail
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=mailpit
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_FROM_ADDRESS="hello@example.com"
-MAIL_FROM_NAME="${APP_NAME}"
-```
-
-## Cache & Session
-
-```env
-CACHE_DRIVER=file
-SESSION_DRIVER=file
-QUEUE_CONNECTION=sync
-```
-
-For production, consider using `redis` for cache, session, and queue.
-
-## Netlify Deployment
-
-When deploying the Nuxt frontend to Netlify with pnpm:
-
-- **`.npmrc`** – The project includes `public-hoist-pattern[]=*` so Vue and other modules resolve correctly during the Netlify build.
-- **`netlify.toml`** – Uses `PNPM_FLAGS = "--shamefully-hoist"` for compatibility with Nuxt on Netlify's build environment.
-
-These settings address the "Could not resolve entry module vue" error that can occur with pnpm's default module layout.
-
-## Example `.env`
+## Example `.env` (Nuxt)
 
 ```env
 APP_NAME=Nucleify
 APP_ENV=local
-APP_KEY=base64:your-key-here
 APP_DEBUG=true
-APP_URL=http://localhost:8000
+NUXT_PUBLIC_APP_URL=http://localhost:3000
 
-API_URL=http://localhost:8000/api
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+APP_FRONTEND=nuxt
 SSR=true
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=nucleify
-DB_USERNAME=root
-DB_PASSWORD=
-
-CACHE_DRIVER=file
-SESSION_DRIVER=file
-QUEUE_CONNECTION=sync
+NITRO_PRESET=cloudflare
 ```
 
+See [Supabase configuration](/en/docs/configuration/supabase) for how these keys are used in the API gateway and client.

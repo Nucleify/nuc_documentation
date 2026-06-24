@@ -1,6 +1,6 @@
 # Moduły
 
-Moduły są główną jednostką organizacyjną w Nucleify. Zamykają powiązaną funkcjonalność w samodzielnych, wielokrotnego użytku modułach, które działają zarówno po stronie Laravel (backend) jak i Vue/Nuxt (frontend).
+Moduły są główną jednostką organizacyjną w Nucleify. Zamykają powiązaną funkcjonalność w samodzielnych pakietach wielokrotnego użytku, które działają z **Supabase** (SQL + handlery API) oraz **Vue/Nuxt** lub **React/Next** (frontend).
 
 ## Konwencja nazewnictwa
 
@@ -16,18 +16,18 @@ Moduły core (`nuc_*`) są utrzymywane przez Nucleify. Moduły własne powinny u
 ```txt
 modules/ex_example/
 ├── config.json              # Metadane modułu (wymagane)
-├── ex_example.php           # Laravel ServiceProvider (wymagane dla backendu)
-├── ex_example.ts            # Rejestracja komponentów Vue (wymagane dla frontendu)
-├── index.ts                 # Barrel export TypeScript (wymagane dla frontendu)
+├── ex_example.ts            # Rejestracja komponentów Vue
+├── ex_example.react.ts      # Rejestracja React (opcjonalnie)
+├── index.ts                 # Barrel export TypeScript
 ├── _index.scss              # Punkt wejścia SCSS
-├── README.md                # Dokumentacja modułu
-├── app/                     # Logika backendu Laravel
-├── atomic/                  # Komponenty Vue i TypeScript
-├── config/                  # Pliki konfiguracyjne PHP
-├── database/                # Migracje, factories, seedery
-├── routes/                  # Trasy API
-├── tests/                   # Testy PHP/Pest
-└── vitests/                 # Testy frontendowe Vitest
+├── README.md
+├── atomic/                  # Komponenty UI i composables
+├── supabase/                # Backend: SQL + handlery API
+│   ├── migrations/
+│   ├── seeders/
+│   ├── factories/
+│   └── api/handle.ts
+└── vitests/                 # Testy Vitest
 ```
 
 ## Wymagane pliki
@@ -56,49 +56,36 @@ Metadane i stan modułu:
 | `installed` | Czy moduł jest zainstalowany |
 | `enabled` | Czy moduł jest aktywny |
 
-### `ex_example.php`
-
-Laravel ServiceProvider do rejestracji backendu:
-
-```php
-<?php
-
-namespace Modules\ex_example;
-
-use Illuminate\Support\ServiceProvider;
-
-class ex_example extends ServiceProvider
-{
-    public function boot(): void
-    {
-        $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
-        $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
-    }
-}
-```
-
-Zarejestruj w `config/modules.php`:
-
-```php
-return [
-    Modules\ex_example\ex_example::class,
-];
-```
-
 ### `ex_example.ts`
 
 Globalna rejestracja komponentów Vue:
 
 ```typescript
 import type { App } from 'vue'
-import { ExExamplePage, ExExampleDashboard } from './atomic'
+import { ExExamplePage } from './atomic'
 
 export function registerExExample(app: App<Element>): void {
-  app
-    .component('ex-example-page', ExExamplePage)
-    .component('ex-example-dashboard', ExExampleDashboard)
+  app.component('ex-example-page', ExExamplePage)
 }
 ```
+
+Zarejestruj w `nuxt/plugins/modules.ts` przez `registerExExample`.
+
+### `supabase/api/handle.ts`
+
+Handler API dla bramki modułu:
+
+```typescript
+import { apiNotHandled, trySimpleCrud } from 'nuc_api'
+import type { ApiContext, ApiHandlerResult } from 'nuc_server'
+
+export async function handleExampleApi(ctx: ApiContext): Promise<ApiHandlerResult> {
+  if (ctx.segments[0] !== 'examples') return apiNotHandled()
+  return (await trySimpleCrud(ctx, { table: 'examples' })) ?? apiNotHandled()
+}
+```
+
+Dodaj `handleExampleApi` do tablicy handlerów w `nuxt/server/api/[...slug].ts`.
 
 ### `index.ts`
 
@@ -116,29 +103,20 @@ Dodaj do `modules/index.ts`:
 export * from './ex_example'
 ```
 
-## Struktura backendu (`app/`)
+## Struktura backendu (`supabase/`)
 
 ```txt
-app/
-├── Contracts/                      # Interfejsy
-│   └── ExampleContract.php
-├── Facades/                        # Fasady Laravel
-│   └── ExampleFacade.php
-├── Http/
-│   ├── Controllers/                # Kontrolery API
-│   │   └── ExampleController.php
-│   ├── Middleware/                 # Własne middleware
-│   └── Requests/                   # Walidacja formularzy
-│       └── Example/
-│           ├── PostRequest.php
-│           └── PutRequest.php
-├── Models/                         # Modele Eloquent
-│   └── Example.php
-├── Resources/                      # Zasoby API
-│   └── ExampleResource.php
-└── Services/                       # Logika biznesowa
-    └── ExampleService.php
+supabase/
+├── migrations/                     # Schemat PostgreSQL (*.sql)
+├── seeders/                        # Dane seed
+├── factories/                      # Dane demo/testowe
+├── api/
+│   ├── handle.ts                   # Wejście bramki: handleExampleApi
+│   └── *_helpers.ts                # Nazwy tabel, mapowanie wierszy
+└── functions/                      # Opcjonalne Edge Functions
 ```
+
+Handlery używają helperów `nuc_api` (`trySimpleCrud`, `tryScopedCrud`) oraz klienta Supabase JS przekazanego w `ApiContext`.
 
 ## Struktura frontendu (`atomic/`)
 
@@ -168,7 +146,7 @@ atomic/
 
 ### Bosons
 
-Najmniejsze elementy składowe - typy, stałe, narzędzia:
+Najmniejsze elementy składowe — typy, stałe, narzędzia:
 
 ```typescript
 // atomic/bosons/types/api/interfaces.ts
@@ -212,59 +190,20 @@ Wielokrotnego użytku sekcje stron:
 </template>
 ```
 
-## Baza danych (`database/`)
+## Baza danych (`supabase/migrations/`)
 
 ```txt
-database/
-├── factories/                        # Factories modeli do testów
-│   └── ExampleFactory.php
-├── migrations/                       # Migracje bazy danych
-│   └── 2024_01_01_000000_create_examples_table.php
-└── seeders/                          # Seedery danych
-    └── ExampleSeeder.php
+supabase/migrations/
+└── 20260501000000_nuc_example.sql
 ```
 
-## Trasy (`routes/`)
+Zastosuj przez `bash .config/bash/apply-module-migrations.sh` (scala SQL ze wszystkich modułów).
 
-```php
-// routes/api.php
-Route::prefix('api')->group(function (): void {
-    Route::middleware(['web', 'auth'])->group(function (): void {
-        Route::prefix('examples')->controller(ExampleController::class)->group(function (): void {
-            Route::get('/', 'index')->name('examples.index');
-            Route::get('/{id}', 'show')->name('examples.show');
-            Route::post('/', 'store')->name('examples.store');
-            Route::put('/{id}', 'update')->name('examples.update');
-            Route::delete('/{id}', 'destroy')->name('examples.destroy');
-        });
-    });
-});
-```
+## Trasy API
+
+Bramka mapuje `/api/{segments}` na handlery modułów. Przykład: `GET /api/examples` → `handleExampleApi` → `supabase.from('examples').select()`.
 
 ## Testowanie
-
-### Testy PHP (`tests/`)
-
-Używa Pest PHP z uporządkowaną strukturą:
-
-```txt
-tests/
-├── Pest.php                        # Konfiguracja Pest
-├── TestGroups.php                  # Definicje grup testów
-├── TestUses.php                    # Współdzielone traity testów
-├── Database/
-│   ├── Factories/                  # Testy factories
-│   ├── Migrations/                 # Testy migracji
-│   └── Models/                     # Testy modeli
-└── Feature/
-    ├── Api/                        # Testy endpointów HTTP
-    │   └── Example/
-    │       ├── HTTP200Test.php
-    │       ├── HTTP401Test.php
-    │       └── HTTP405Test.php
-    ├── Controllers/                # Testy kontrolerów
-    └── Services/                   # Testy serwisów
-```
 
 ### Vitest (`vitests/`)
 
@@ -288,20 +227,18 @@ vitests/
 2. **Dodaj `config.json`** z metadanymi modułu
 
 3. **Utwórz punkty wejścia**:
-   - `twojprefix_nazwamodulu.php` (jeśli potrzebny backend)
-   - `twojprefix_nazwamodulu.ts` (jeśli potrzebny frontend)
+   - `twojprefix_nazwamodulu.ts` (Vue) i/lub `.react.ts` (React)
    - `index.ts` (zawsze wymagane)
+   - `supabase/api/handle.ts` (jeśli potrzebne API)
 
 4. **Zarejestruj moduł**:
-   - Dodaj do `config/modules.php` (backend)
-   - Dodaj do `modules/index.ts` (frontend)
+   - Dodaj handler do `nuxt/server/api/[...slug].ts` (i bramki Next, jeśli używana)
+   - Dodaj do `modules/index.ts` i `nuxt/plugins/modules.ts`
 
 5. **Dodaj strukturę** według potrzeb:
-   - `app/` dla logiki backendu
-   - `atomic/` dla komponentów frontendu
-   - `database/` dla migracji
-   - `routes/` dla endpointów API
-   - `tests/` i `vitests/` dla testów
+   - `atomic/` dla UI
+   - `supabase/migrations`, `seeders` dla bazy danych
+   - `vitests/` dla testów
 
 ## Dobre praktyki
 
@@ -309,6 +246,6 @@ vitests/
 - **Eksporty**: Eksportuj wszystko przez pliki `index.ts`
 - **Typy**: Definiuj wszystkie typy TypeScript w `atomic/bosons/types/`
 - **API**: Trzymaj logikę API w `atomic/bosons/utils/api/`
-- **Testowanie**: Pisz testy zarówno dla backendu jak i frontendu
+- **Testowanie**: Preferuj Vitest dla UI i composables API
 - **SCSS**: Używaj `_index.scss` dla stylów specyficznych dla modułu
 - **Dokumentacja**: Dołącz `README.md` do każdego modułu

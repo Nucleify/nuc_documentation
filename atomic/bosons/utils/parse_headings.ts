@@ -1,4 +1,4 @@
-import type { DocHeadingInterface } from '../types'
+import type { DocHeadingInterface } from 'nucleify'
 
 export function parseHeadings(html: string): DocHeadingInterface[] {
   // Use regex to parse headings - works on both server and client

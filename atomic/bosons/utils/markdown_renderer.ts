@@ -1,14 +1,13 @@
-import type { Tokens } from 'marked'
-import { marked } from 'marked'
-
-import { slugify } from '.'
-
 import hljs from 'highlight.js/lib/core'
 import bash from 'highlight.js/lib/languages/bash'
 import json from 'highlight.js/lib/languages/json'
 import php from 'highlight.js/lib/languages/php'
 import typescript from 'highlight.js/lib/languages/typescript'
 import xml from 'highlight.js/lib/languages/xml'
+import type { Tokens } from 'marked'
+import { marked } from 'marked'
+
+import { slugify } from 'nucleify'
 
 hljs.registerLanguage('typescript', typescript)
 hljs.registerLanguage('php', php)

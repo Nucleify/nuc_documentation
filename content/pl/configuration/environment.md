@@ -1,105 +1,71 @@
 # Zmienne środowiskowe
 
-Nucleify używa zmiennych środowiskowych do konfiguracji. Skopiuj `.config/.env.docker.example` do `.env` i skonfiguruj.
+Nucleify odczytuje konfigurację z `.env` w katalogu głównym repozytorium. Użyj `.config/.env.nuxt.example` lub `.config/.env.next.example` jako szablonu (`make nuxt` / `make next` kopiuje go automatycznie).
 
-Pliki konfiguracyjne (phpunit, pint, stylelint, nuxt, docker-compose itd.) znajdują się w `.config/`. Pliki w root rozszerzają lub dołączają je.
+Konfiguracja Nuxt znajduje się w `.config/nuxt/` i jest scalana w `.config/nuxt.config.ts`.
 
-## Wymagane zmienne
+## Wymagane (Supabase)
 
 | Zmienna | Opis | Przykład |
 |---------|------|----------|
-| `APP_URL` | URL aplikacji | `http://localhost:8000` |
-| `APP_ENV` | Środowisko | `local`, `production` |
-| `APP_KEY` | Klucz szyfrowania Laravel | `base64:...` |
-| `DB_CONNECTION` | Sterownik bazy danych | `mysql`, `pgsql`, `sqlite` |
-| `DB_DATABASE` | Nazwa bazy danych | `nucleify` |
+| `SUPABASE_URL` | URL projektu Supabase | `https://xxx.supabase.co` |
+| `SUPABASE_KEY` | Klucz anon/public (bezpieczny w przeglądarce) | `eyJhbG…` |
+| `SUPABASE_SERVICE_ROLE_KEY` | Klucz service role (tylko serwer) | `eyJhbG…` |
 
-## Zmienne frontend
+Nigdy nie udostępniaj `SUPABASE_SERVICE_ROLE_KEY` w bundle klienta ani publicznych repozytoriach.
+
+## Aplikacja
 
 | Zmienna | Opis | Domyślnie |
 |---------|------|-----------|
-| `API_URL` | URL endpointu API | `${APP_URL}/api` |
-| `SSR` | Włącz server-side rendering | `true` |
+| `APP_NAME` | Nazwa aplikacji | `Nucleify` |
+| `APP_ENV` | Środowisko | `local` |
+| `APP_DEBUG` | Szczegółowe błędy | `true` |
+| `APP_FRONTEND` | Aktywny stack | `nuxt` lub `next` |
+| `NUXT_PUBLIC_APP_URL` | Publiczny URL (Nuxt) | `http://localhost:3000` |
 
-## SSR i Prerendering
+## SSR i prerendering (Nuxt)
 
 ```env
 SSR=true
-PRERENDER_ROUTES=/,/home,/docs
+PRERENDER_ROUTES=/home,/dev,/login,/docs
 PRERENDER_CRAWL_LINKS=true
-PRERENDER_IGNORE=/admin,/login
+PRERENDER_IGNORE=/settings
+PRERENDER_LOCALES=en,pl,vn
+NITRO_PRESET=cloudflare
 ```
 
 | Zmienna | Opis |
 |---------|------|
-| `SSR` | Włącz/wyłącz SSR |
+| `SSR` | Włącz server-side rendering |
 | `PRERENDER_ROUTES` | Trasy do prerenderowania (przecinek) |
-| `PRERENDER_CRAWL_LINKS` | Auto-odkrywanie linków podczas prerender |
-| `PRERENDER_IGNORE` | Trasy do pominięcia podczas prerender |
+| `PRERENDER_CRAWL_LINKS` | Odkrywanie linków podczas prerender |
+| `PRERENDER_IGNORE` | Trasy do pominięcia |
+| `NITRO_PRESET` | Cel wdrożenia Nitro |
 
-## Baza danych
+## Opcjonalne
 
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=nucleify
-DB_USERNAME=root
-DB_PASSWORD=secret
-```
+| Zmienna | Opis |
+|---------|------|
+| `SUPABASE_EDGE_BASE` | Bazowy URL Edge Functions |
+| `NUC_CONVERT_DOCUMENTS_URL` | Zewnętrzny serwis konwersji dokumentów |
+| `DEV_TOOLS` | Włącz Nuxt devtools |
 
-## Mail
-
-```env
-MAIL_MAILER=smtp
-MAIL_HOST=mailpit
-MAIL_PORT=1025
-MAIL_USERNAME=null
-MAIL_PASSWORD=null
-MAIL_FROM_ADDRESS="hello@example.com"
-MAIL_FROM_NAME="${APP_NAME}"
-```
-
-## Cache i sesja
-
-```env
-CACHE_DRIVER=file
-SESSION_DRIVER=file
-QUEUE_CONNECTION=sync
-```
-
-Na produkcji rozważ użycie `redis` dla cache, sesji i kolejki.
-
-## Wdrożenie na Netlify
-
-Przy wdrażaniu frontendu Nuxt na Netlify z pnpm:
-
-- **`.npmrc`** – Projekt zawiera `public-hoist-pattern[]=*`, dzięki czemu Vue i inne moduły są poprawnie rozwiązywane podczas buildu na Netlify.
-- **`netlify.toml`** – Używa `PNPM_FLAGS = "--shamefully-hoist"` dla zgodności z Nuxt w środowisku buildu Netlify.
-
-Te ustawienia rozwiązują błąd „Could not resolve entry module vue” występujący przy domyślnym układzie modułów pnpm.
-
-## Przykład `.env`
+## Przykład `.env` (Nuxt)
 
 ```env
 APP_NAME=Nucleify
 APP_ENV=local
-APP_KEY=base64:your-key-here
 APP_DEBUG=true
-APP_URL=http://localhost:8000
+NUXT_PUBLIC_APP_URL=http://localhost:3000
 
-API_URL=http://localhost:8000/api
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+APP_FRONTEND=nuxt
 SSR=true
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=nucleify
-DB_USERNAME=root
-DB_PASSWORD=
-
-CACHE_DRIVER=file
-SESSION_DRIVER=file
-QUEUE_CONNECTION=sync
+NITRO_PRESET=cloudflare
 ```
 
+Zobacz [konfigurację Supabase](/pl/docs/configuration/supabase), aby dowiedzieć się, jak te klucze są używane w bramce API i kliencie.

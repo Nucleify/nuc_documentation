@@ -1,4 +1,4 @@
-import type { DocCategoryInterface } from '../types'
+import type { DocCategoryInterface } from 'nucleify'
 
 export const DOC_CATEGORIES: DocCategoryInterface[] = [
   {
@@ -33,17 +33,14 @@ export const DOC_CATEGORIES: DocCategoryInterface[] = [
     pages: [
       { slug: 'environment', title: 'Environment', order: 1 },
       { slug: 'nuxt', title: 'Nuxt', order: 2 },
-      { slug: 'laravel', title: 'Laravel', order: 3 },
+      { slug: 'supabase', title: 'Supabase', order: 3 },
     ],
   },
   {
     name: 'Tests',
     slug: 'tests',
     order: 4,
-    pages: [
-      { slug: 'pest', title: 'Pest', order: 1 },
-      { slug: 'vitest', title: 'Vitest', order: 2 },
-    ],
+    pages: [{ slug: 'vitest', title: 'Vitest', order: 1 }],
   },
   {
     name: 'About',

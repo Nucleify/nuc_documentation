@@ -14,13 +14,13 @@ Feature-Sliced Design (FSD) organizuje kod według domeny biznesowej zamiast war
 ```txt
 # ❌ Warstwowa                   # ✅ Domenowa
 src/                             modules/
-├── controllers/                 ├── nuc_auth/
-│   ├── AuthController.php       │   ├── app/Controllers/
-│   └── UserController.php       │   ├── app/Models/
-├── models/                      │   ├── atomic/pages/
-│   └── User.php                 │   └── tests/
-└── views/                       └── nuc_entities/
-    └── auth/                        ├── app/Controllers/
+├── api/                         ├── nuc_auth/
+│   ├── auth-handler.ts          │   ├── supabase/api/handle.ts
+│   └── user-handler.ts          │   ├── supabase/migrations/
+├── db/                          │   ├── atomic/pages/
+│   └── users.sql                │   └── vitests/
+└── ui/                          └── nuc_entities/
+    └── auth/                        ├── supabase/api/handle.ts
                                      └── atomic/pages/
 ```
 
@@ -36,8 +36,8 @@ src/                             modules/
 
 ## Zależności warstw
 
-**Backend (`app/`):**
-Controllers → Services → Models
+**Backend (`supabase/`):**
+`api/handle.ts` → helpery → PostgreSQL (migracje, RLS)
 
 **Frontend (`atomic/`):**
 pages → templates → bosons (types, utils, constants)

@@ -6,7 +6,7 @@
 
 > *"Przestań wymyślać koło na nowo. Zacznij budować swój produkt. Teraz!"*
 
-Napędzany przez **Laravel 11** + **Nuxt 3** - najpotężniejszą kombinację backend-frontend w branży - Nucleify przekształca miesiące developmentu w dni, zachowując przy tym jakość kodu na poziomie enterprise i wyniki PageSpeed 94+.
+Napędzany przez **Supabase** + **Nuxt 3** / **Next.js** — Nucleify to modularna aplikacja full-stack z PostgreSQL, Auth i bramką API modułów.
 
 ---
 
@@ -14,7 +14,7 @@ Napędzany przez **Laravel 11** + **Nuxt 3** - najpotężniejszą kombinację ba
 
 Za szybkością stoi **modularna architektura inspirowana jądrem atomu** - każda funkcjonalność żyje jako samodzielny, niezależnie testowalny moduł. Koniec z poplątanymi zależnościami. Koniec z "u mnie działa". Tylko czysty, przewidywalny kod, który skaluje się wraz z Twoim zespołem i ambicjami.
 
-**Laravel 11** obsługuje Twoje API, uwierzytelnianie i logikę biznesową. **Nuxt 3** dostarcza błyskawiczne SSR i reaktywny frontend. Nucleify łączy je płynnie - jeden codebase, jeden workflow, nieskończone możliwości.
+**Supabase** przechowuje dane i uwierzytelnia użytkowników. **Nuxt 3** lub **Next.js** dostarcza SSR i reaktywny UI. Handlery w `supabase/api/` łączą oba światy przez `/api/*`.
 
 ### Liczby
 
@@ -31,7 +31,7 @@ Za szybkością stoi **modularna architektura inspirowana jądrem atomu** - każ
 ### Co otrzymujesz
 
 - **40+ gotowych modułów produkcyjnych** - Auth, pliki, wykresy, datatables, animacje - wszystko wbudowane
-- **Pełne typowanie** - TypeScript + PHP type hints = zero niespodzianek w runtime
+- **Pełne typowanie** - TypeScript w całym stacku = zero niespodzianek w runtime
 - **System Atomic Design** - 100+ komponentów zgodnych z najlepszymi praktykami branży
 - **System Override** - Dostosuj dowolny moduł bez forkowania, zachowaj ścieżki aktualizacji
 - **Setup jedną komendą** - `make` i już działasz
@@ -51,11 +51,11 @@ Za szybkością stoi **modularna architektura inspirowana jądrem atomu** - każ
 
 ## Przegląd architektury
 
-Nucleify implementuje **płynne połączenie** między Laravel a Nuxt:
+Nucleify łączy **frontend** z **Supabase** przez bramkę API modułów:
 
 ```txt
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                    NUXT 3 FRONTEND                                     │
+│                          NUXT 3 / NEXT (frontend + trasy /api)                         │
 │                                                                                        │
 │  ┌────────────────────┐  ┌────────────────────┐  ┌──────────────────────────────────┐  │
 │  │       Pages        │  │      Layouts       │  │        Atomic Components         │  │
@@ -63,29 +63,22 @@ Nucleify implementuje **płynne połączenie** między Laravel a Nuxt:
 │  └────────────────────┘  └────────────────────┘  └──────────────────────────────────┘  │
 │                                           │                                            │
 │  ┌────────────────────────────────────────▼─────────────────────────────────────────┐  │
-│  │                           ZARZĄDZANIE STANEM PINIA                               │  │
-│  │                         (Persystentne, Reaktywne, Typowane)                      │  │
+│  │                       ZARZĄDZANIE STANEM PINIA / ZUSTAND                        │  │
 │  └────────────────────────────────────────┬─────────────────────────────────────────┘  │
 │                                           │                                            │
 │  ┌────────────────────────────────────────▼─────────────────────────────────────────┐  │
-│  │                           MODUŁ nuc_api (Warstwa HTTP)                           │  │
-│  │                       Uwierzytelnianie Laravel Sanctum                           │  │
+│  │              nuc_api — apiRequest, Supabase Auth (klient)                        │  │
 │  └────────────────────────────────────────┬─────────────────────────────────────────┘  │
 └───────────────────────────────────────────┼────────────────────────────────────────────┘
-                                            │
-                                         REST API
+                                            │  /api/*
+┌───────────────────────────────────────────▼────────────────────────────────────────────┐
+│                       HANDLERY MODUŁÓW (supabase/api/handle.ts)                        │
+│                    Bramka nuc_api — klient Supabase (service role)                     │
+└───────────────────────────────────────────┬────────────────────────────────────────────┘
                                             │
 ┌───────────────────────────────────────────▼────────────────────────────────────────────┐
-│                                   LARAVEL 11 BACKEND                                   │
-│                                                                                        │
-│  ┌─────────────────────────┐  ┌──────────────────────────┐  ┌───────────────────────┐  │
-│  │       Controllers       │  │         Services         │  │        Models         │  │
-│  │         (HTTP)          │◄─│     (Logika Biznesowa)   │◄─│     (Eloquent ORM)    │  │
-│  └─────────────────────────┘  └──────────────────────────┘  └───────────────────────┘  │
-│                                            │                                           │
-│  ┌─────────────────────────────────────────▼────────────────────────────────────────┐  │
-│  │                                   BAZA DANYCH MySQL                              │  │
-│  └──────────────────────────────────────────────────────────────────────────────────┘  │
+│                                    SUPABASE (PostgreSQL)                               │
+│                         Auth · Storage · RLS · Edge Functions                          │
 └────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -123,14 +116,14 @@ Każdy moduł jest samodzielny, niezależnie testowalny i może być włączany/
 
 Każdy moduł zawiera cały powiązany kod w jednym katalogu:
 
-```
+```txt
 modules/nuc_auth/
-├── app/                    # Backend PHP (Controllers, Services, Models)
-├── atomic/                 # Komponenty frontend (Vue, TypeScript)
-├── database/               # Migracje, Seedery, Factories
-├── routes/                 # Definicje tras API
-├── tests/                  # Testy Pest PHP
-├── vitests/                # Testy Vitest frontend
+├── atomic/                 # Komponenty Vue/React i composables
+├── supabase/               # Migracje SQL, seedery, handlery API
+│   ├── migrations/
+│   ├── seeders/
+│   └── api/handle.ts
+├── vitests/                # Testy Vitest (frontend)
 └── config.json             # Metadane modułu
 ```
 
@@ -163,11 +156,11 @@ Nadpisania są automatycznie scalane podczas budowania, co pozwala na:
 
 | Warstwa | Technologie |
 |---------|-------------|
-| **Backend** | Laravel 11, PHP 8.2+, Laravel Sanctum, Pest PHP |
-| **Frontend** | Nuxt 3, Vue 3, TypeScript, Pinia, PrimeVue 4 |
+| **Backend** | Supabase (PostgreSQL, Auth, Storage, Edge Functions) |
+| **Frontend** | Nuxt 3 / Next.js, Vue 3 / React, TypeScript, Pinia / Zustand, PrimeVue 4 |
 | **Stylowanie** | SCSS, GSAP, Chart.js |
-| **DevOps** | Docker, Vite, Husky, Biome, TSC, Stylelint |
-| **Testowanie** | Pest, Vitest |
+| **DevOps** | Supabase CLI, Vite, Husky, Biome, TSC, Stylelint |
+| **Testowanie** | Vitest |
 
 ---
 

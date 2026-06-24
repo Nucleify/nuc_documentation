@@ -8,20 +8,12 @@ Standards for code, structure, and naming in Nucleify. Following these ensures r
 
 ```txt
 root/
-├── app/                    # Laravel core application
-│   ├── Console/            # Artisan commands
-│   ├── Exceptions/         # Exception handlers
-│   ├── Http/               # Controllers, Middleware
-│   ├── Providers/          # Service providers
-│   ├── Services/           # Shared services
-│   └── Traits/             # Reusable traits
-│
-├── config/                 # Laravel configuration
-├── database/               # Migrations, factories, seeders
-├── routes/                 # Route definitions
-├── modules/                # Self-contained feature modules
-├── nuxt/                   # Frontend (Nuxt/Vue)
-└── tests/                  # Global tests
+├── modules/                # Self-contained feature modules (supabase/, atomic/)
+├── nuxt/                   # Nuxt frontend
+├── next/                   # Next.js frontend (optional)
+├── supabase/               # Merged SQL temp, local Supabase config
+├── .config/                # Nuxt/Next/tooling configuration
+└── vitests/                # Global frontend tests
 ```
 
 ---
@@ -30,38 +22,28 @@ root/
 
 ```txt
 modules/<module_name>/
-├── app/                    # Backend PHP code
-│   ├── Controllers/
-│   ├── Services/
-│   ├── Models/
-│   ├── Resources/
-│   └── Requests/
-├── config/                 # Module configuration
-├── database/               # Migrations, seeders, factories
-├── routes/                 # Module routes
-├── atomic/                 # Frontend (TS/Vue/SCSS)
-├── tests/                  # Backend tests (Pest)
+├── supabase/               # Migrations, seeders, API handlers
+├── atomic/                 # UI (Vue/React/TS/SCSS)
 ├── vitests/                # Frontend tests (Vitest)
 ├── config.json             # Module metadata
-├── index.ts                # Frontend entry
-├── <module_name>.ts        # Main frontend file
-├── <module_name>.php       # Main backend file
-└── README.md               # Documentation
+├── index.ts                # Barrel export
+├── <module_name>.ts        # Vue registration
+├── <module_name>.react.ts  # React registration (optional)
+└── README.md
 ```
 
 ---
 
 ## Naming Conventions
 
-### Backend (Laravel/PHP)
+### Backend (Supabase)
 
 | Type | Convention | Example |
 |------|------------|---------|
 | Module folders | `snake_case` | `nuc_auth`, `nuc_entities` |
-| PHP classes | `PascalCase` | `UserController.php` |
-| Config files | `snake_case` | `nuc_auth.php` |
-| Migrations | Laravel convention | `2024_01_01_000000_create_users_table.php` |
-| Routes | `kebab-case` URLs | `/api/user-profile` |
+| SQL migrations | Timestamp prefix | `20260501000000_nuc_auth.sql` |
+| API handlers | `snake_case` | `handle.ts` in `supabase/api/` |
+| API routes | `kebab-case` URLs | `/api/user-profile` |
 
 ### Frontend (Nuxt/Vue/TypeScript)
 
@@ -130,20 +112,14 @@ function getUser(id: any): any {
 }
 ```
 
-### PHP
+### API handlers (TypeScript)
 
-```php
-// ✅ Good - type hints
-public function store(UserRequest $request): JsonResponse
-{
-    $user = $this->userService->create($request->validated());
-    return response()->json($user);
-}
-
-// ❌ Bad - no types
-public function store($request)
-{
-    // ...
+```typescript
+// ✅ Good - typed handler result
+export async function handle(ctx: ApiContext): Promise<ApiHandlerResult> {
+  const crud = await trySimpleCrud(ctx)
+  if (crud.handled) return crud
+  return apiNotHandled()
 }
 ```
 
@@ -169,7 +145,7 @@ const emit = defineEmits<{
 ## Module Guidelines
 
 - Each module should be **self-contained**
-- Backend logic in `modules/<module>/app/`
+- Backend logic in `modules/<module>/supabase/`
 - Frontend in `modules/<module>/atomic/`
 - Global components in `nuxt/atomic/`
 - Use `config.json` for metadata
@@ -179,7 +155,7 @@ const emit = defineEmits<{
 
 ## Why These Standards
 
-- Aligns with Laravel + Nuxt patterns
+- Aligns with Nuxt, Next, and Supabase patterns
 - Enables horizontal scaling with modules
 - Clear separation backend/frontend
 - Consistent UI with Atomic Design

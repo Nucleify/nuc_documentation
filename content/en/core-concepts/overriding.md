@@ -4,7 +4,7 @@ Overrides allow you to replace original files without modifying source code. Thi
 
 Supported overrides:
 - **Frontend** (Vue, TypeScript): `nuxt/`, `modules/*`
-- **Backend** (Laravel, PHP): `modules/*`, `app/*`, `config/*`, `database/*`, `routes/*`
+- **Backend** (Supabase SQL, API handlers): `modules/*/supabase/`
 
 ## Key Rules
 
@@ -27,12 +27,12 @@ overrides/
 └── modules/                 # Overrides for modules/ directory
     └── nuc_auth/
         ├── atomic/
-        └── app/
+        └── supabase/
 ```
 
 The system automatically:
 - **Frontend**: Redirects imports, excludes originals from build, handles all import types
-- **Backend**: Loads override PHP files instead of originals during bootstrap
+- **Backend**: Same mechanism for `supabase/api/*.ts` handlers imported by the API gateway (TypeScript overrides)
 
 ## Common Use Cases
 
@@ -46,22 +46,20 @@ overrides/
         │   └── pages/
         │       └── Login/
         │           └── index.vue      # Custom login UI
-        └── app/
-            └── Http/
-                └── Controllers/
-                    └── Auth/
-                        └── LoginController.php     # Custom auth logic
+        └── supabase/
+            └── api/
+                └── handle.ts              # Custom API logic
 ```
 
-### Extended User Model
+### Custom API handler
 
 ```txt
 overrides/
 └── modules/
     └── nuc_entities/
-        └── app/
-            └── Models/
-                └── User.php           # Additional fields/relations
+        └── supabase/
+            └── api/
+                └── handle.ts           # Extra validation or custom queries
 ```
 
 ### Custom Dashboard
@@ -113,41 +111,25 @@ Override: `overrides/nuxt/pages/dashboard.vue`
 
 ## Backend Overrides
 
-### Models
+### API handlers
 
-Original: `modules/nuc_entities/app/Models/User.php`
+Original: `modules/nuc_auth/supabase/api/handle.ts`
 
-Override: `overrides/modules/nuc_entities/app/Models/User.php`
+Override: `overrides/modules/nuc_auth/supabase/api/handle.ts`
 
-```php
-<?php
+```typescript
+import { apiNotHandled } from 'nuc_api'
+import type { ApiContext, ApiHandlerResult } from 'nuc_server'
 
-namespace Modules\nuc_entities\app\Models;
-
-class User extends \Illuminate\Foundation\Auth\User
-{
-    // Your custom model logic
-    protected $fillable = ['name', 'email', 'custom_field'];
+export async function handleAuthApi(ctx: ApiContext): Promise<ApiHandlerResult> {
+  // Your custom handler logic
+  return apiNotHandled()
 }
 ```
 
-### Services
+### SQL migrations
 
-Original: `modules/nuc_auth/app/Services/AuthService.php`
-
-Override: `overrides/modules/nuc_auth/app/Services/AuthService.php`
-
-### Controllers
-
-Original: `modules/nuc_entities/app/Http/Controllers/UserController.php`
-
-Override: `overrides/modules/nuc_entities/app/Http/Controllers/UserController.php`
-
-### Configurations
-
-Original: `modules/nuc_auth/config/auth.php`
-
-Override: `overrides/modules/nuc_auth/config/auth.php`
+For schema changes specific to your deployment, prefer new migration files in your own module rather than overriding core SQL. If you must override seed data, mirror the path under `overrides/modules/<module>/supabase/seeders/`.
 
 ## Technical Details
 
@@ -159,9 +141,4 @@ The override system uses a Vite plugin that:
 3. Intercepts file loads and returns override content
 4. Watches for changes and hot-reloads
 
-### Backend (PHP Service)
-
-The `OverrideService` class:
-1. Builds a map of original → override paths
-2. Provides `getOverridePath()` for resolution
-3. Helper functions use this service automatically
+Server-side API handlers under `modules/*/supabase/api/` use the same resolution when imported through the Nuxt/Next build.

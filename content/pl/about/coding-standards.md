@@ -8,20 +8,12 @@ Standardy dla kodu, struktury i nazewnictwa w Nucleify. Przestrzeganie ich zapew
 
 ```txt
 root/
-├── app/                    # Główna aplikacja Laravel
-│   ├── Console/            # Komendy Artisan
-│   ├── Exceptions/         # Obsługa wyjątków
-│   ├── Http/               # Kontrolery, Middleware
-│   ├── Providers/          # Service providers
-│   ├── Services/           # Współdzielone serwisy
-│   └── Traits/             # Reużywalne traity
-│
-├── config/                 # Konfiguracja Laravel
-├── database/               # Migracje, fabryki, seedery
-├── routes/                 # Definicje routów
-├── modules/                # Samowystarczalne moduły
-├── nuxt/                   # Frontend (Nuxt/Vue)
-└── tests/                  # Testy globalne
+├── modules/                # Samowystarczalne moduły (supabase/, atomic/)
+├── nuxt/                   # Frontend Nuxt
+├── next/                   # Frontend Next.js (opcjonalnie)
+├── supabase/               # Scalone SQL, lokalna konfiguracja Supabase
+├── .config/                # Konfiguracja Nuxt/Next/narzędzi
+└── vitests/                # Globalne testy frontendu
 ```
 
 ---
@@ -30,38 +22,28 @@ root/
 
 ```txt
 modules/<nazwa_modulu>/
-├── app/                    # Kod backendowy PHP
-│   ├── Controllers/
-│   ├── Services/
-│   ├── Models/
-│   ├── Resources/
-│   └── Requests/
-├── config/                 # Konfiguracja modułu
-├── database/               # Migracje, seedery, fabryki
-├── routes/                 # Routy modułu
-├── atomic/                 # Frontend (TS/Vue/SCSS)
-├── tests/                  # Testy backendowe (Pest)
-├── vitests/                # Testy frontendowe (Vitest)
+├── supabase/               # Migracje, seedery, handlery API
+├── atomic/                 # UI (Vue/React/TS/SCSS)
+├── vitests/                # Testy Vitest
 ├── config.json             # Metadane modułu
-├── index.ts                # Entry point frontend
-├── <nazwa_modulu>.ts       # Główny plik frontend
-├── <nazwa_modulu>.php      # Główny plik backend
-└── README.md               # Dokumentacja
+├── index.ts                # Barrel export
+├── <nazwa_modulu>.ts       # Rejestracja Vue
+├── <nazwa_modulu>.react.ts # Rejestracja React (opcjonalnie)
+└── README.md
 ```
 
 ---
 
 ## Konwencje nazewnictwa
 
-### Backend (Laravel/PHP)
+### Backend (Supabase)
 
 | Typ | Konwencja | Przykład |
 |-----|-----------|----------|
 | Foldery modułów | `snake_case` | `nuc_auth`, `nuc_entities` |
-| Klasy PHP | `PascalCase` | `UserController.php` |
-| Pliki konfiguracji | `snake_case` | `nuc_auth.php` |
-| Migracje | Konwencja Laravel | `2024_01_01_000000_create_users_table.php` |
-| Routy | `kebab-case` w URL | `/api/user-profile` |
+| Migracje SQL | Prefiks timestamp | `20260501000000_nuc_auth.sql` |
+| Handlery API | `snake_case` | `handle.ts` w `supabase/api/` |
+| Routy API | `kebab-case` w URL | `/api/user-profile` |
 
 ### Frontend (Nuxt/Vue/TypeScript)
 
@@ -130,20 +112,14 @@ function getUser(id: any): any {
 }
 ```
 
-### PHP
+### Handlery API (TypeScript)
 
-```php
-// ✅ Dobrze - type hints
-public function store(UserRequest $request): JsonResponse
-{
-    $user = $this->userService->create($request->validated());
-    return response()->json($user);
-}
-
-// ❌ Źle - brak typów
-public function store($request)
-{
-    // ...
+```typescript
+// ✅ Dobrze - typowany wynik handlera
+export async function handle(ctx: ApiContext): Promise<ApiHandlerResult> {
+  const crud = await trySimpleCrud(ctx)
+  if (crud.handled) return crud
+  return apiNotHandled()
 }
 ```
 
@@ -169,7 +145,7 @@ const emit = defineEmits<{
 ## Wytyczne dla modułów
 
 - Każdy moduł powinien być **samowystarczalny**
-- Logika backendowa w `modules/<modul>/app/`
+- Logika backendowa w `modules/<modul>/supabase/`
 - Frontend w `modules/<modul>/atomic/`
 - Globalne komponenty w `nuxt/atomic/`
 - Używaj `config.json` dla metadanych
@@ -179,7 +155,7 @@ const emit = defineEmits<{
 
 ## Dlaczego te standardy
 
-- Zgodność z wzorcami Laravel + Nuxt
+- Zgodność z wzorcami Nuxt, Next i Supabase
 - Umożliwia skalowanie horyzontalne z modułami
 - Jasne rozdzielenie backend/frontend
 - Spójne UI z Atomic Design

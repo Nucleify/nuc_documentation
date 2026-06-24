@@ -164,7 +164,7 @@ vite: {
 },
 ```
 
-Manual chunks for optimal code splitting and caching.
+Manual chunks for optimal code splitting and caching. State management: **Pinia** (Nuxt) with `pinia-plugin-persistedstate`; **Zustand** (Next.js) via `nuc_stores`.
 
 ## SCSS
 
@@ -211,15 +211,13 @@ Use icons with `i-prime` prefix:
 <Icon name="i-prime:check" />
 ```
 
-## Laravel Sanctum
+## Supabase Auth
 
-```typescript
-laravelSanctum: {
-  apiUrl: process.env.APP_URL,
-},
-```
+Authentication uses **Supabase Auth** (JWT sessions). The client is configured via `nuc_client` / `getSupabaseClient()` using `runtimeConfig.public.supabaseUrl` and `supabaseKey`.
 
-Authentication with Laravel Sanctum.
+Login and registration flows live in `nuc_auth`; the server API gateway uses `SUPABASE_SERVICE_ROLE_KEY` from private runtime config.
+
+See [Supabase](/en/docs/configuration/supabase) for the full auth and API flow.
 
 ## Experimental
 

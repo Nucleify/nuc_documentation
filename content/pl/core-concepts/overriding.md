@@ -4,7 +4,7 @@ Nadpisywanie pozwala zastąpić oryginalne pliki bez modyfikowania kodu źródł
 
 Obsługiwane nadpisania:
 - **Frontend** (Vue, TypeScript): `nuxt/`, `modules/*`
-- **Backend** (Laravel, PHP): `modules/*`, `app/*`, `config/*`, `database/*`, `routes/*`
+- **Backend** (Supabase SQL, API handlers): `modules/*/supabase/`
 
 ## Kluczowe zasady
 
@@ -27,12 +27,12 @@ overrides/
 └── modules/                 # Nadpisania dla katalogu modules/
     └── nuc_auth/
         ├── atomic/
-        └── app/
+        └── supabase/
 ```
 
 System automatycznie:
 - **Frontend**: Przekierowuje importy, wyklucza oryginały z buildu, obsługuje wszystkie typy importów
-- **Backend**: Ładuje nadpisane pliki PHP zamiast oryginalnych podczas bootstrapu
+- **Backend**: Ta sama mechanika dla handlerów `supabase/api/*.ts` importowanych przez bramkę API
 
 ## Typowe przypadki użycia
 
@@ -46,22 +46,20 @@ overrides/
         │   └── pages/
         │       └── Login/
         │           └── index.vue      # Własny UI logowania
-        └── app/
-            └── Http/
-                └── Controllers/
-                    └── Auth/
-                        └── LoginController.php     # Własna logika auth
+        └── supabase/
+            └── api/
+                └── handle.ts              # Własna logika API
 ```
 
-### Rozszerzony model User
+### Własny handler API
 
 ```txt
 overrides/
 └── modules/
     └── nuc_entities/
-        └── app/
-            └── Models/
-                └── User.php           # Dodatkowe pola/relacje
+        └── supabase/
+            └── api/
+                └── handle.ts           # Dodatkowa walidacja lub zapytania
 ```
 
 ### Własny dashboard
@@ -113,41 +111,25 @@ Nadpisanie: `overrides/nuxt/pages/dashboard.vue`
 
 ## Nadpisywanie backendu
 
-### Modele
+### Handlery API
 
-Oryginał: `modules/nuc_entities/app/Models/User.php`
+Oryginał: `modules/nuc_auth/supabase/api/handle.ts`
 
-Nadpisanie: `overrides/modules/nuc_entities/app/Models/User.php`
+Nadpisanie: `overrides/modules/nuc_auth/supabase/api/handle.ts`
 
-```php
-<?php
+```typescript
+import { apiNotHandled } from 'nuc_api'
+import type { ApiContext, ApiHandlerResult } from 'nuc_server'
 
-namespace Modules\nuc_entities\app\Models;
-
-class User extends \Illuminate\Foundation\Auth\User
-{
-    // Twoja własna logika modelu
-    protected $fillable = ['name', 'email', 'custom_field'];
+export async function handleAuthApi(ctx: ApiContext): Promise<ApiHandlerResult> {
+  // Twoja własna logika handlera
+  return apiNotHandled()
 }
 ```
 
-### Serwisy
+### Migracje SQL
 
-Oryginał: `modules/nuc_auth/app/Services/AuthService.php`
-
-Nadpisanie: `overrides/modules/nuc_auth/app/Services/AuthService.php`
-
-### Kontrolery
-
-Oryginał: `modules/nuc_entities/app/Http/Controllers/UserController.php`
-
-Nadpisanie: `overrides/modules/nuc_entities/app/Http/Controllers/UserController.php`
-
-### Konfiguracje
-
-Oryginał: `modules/nuc_auth/config/auth.php`
-
-Nadpisanie: `overrides/modules/nuc_auth/config/auth.php`
+Dla zmian schematu specyficznych dla wdrożenia preferuj nowe pliki migracji we własnym module zamiast nadpisywania core SQL. Jeśli musisz nadpisać dane seed, odwzoruj ścieżkę w `overrides/modules/<module>/supabase/seeders/`.
 
 ## Szczegóły techniczne
 
@@ -159,9 +141,4 @@ System nadpisywania używa pluginu Vite który:
 3. Przechwytuje ładowanie plików i zwraca zawartość nadpisania
 4. Obserwuje zmiany i hot-reloaduje
 
-### Backend (PHP Service)
-
-Klasa `OverrideService`:
-1. Buduje mapę oryginał → ścieżka nadpisania
-2. Udostępnia `getOverridePath()` do rozwiązywania
-3. Funkcje pomocnicze używają tego serwisu automatycznie
+Handlery API po stronie serwera w `modules/*/supabase/api/` korzystają z tego samego rozwiązywania ścieżek przy imporcie w buildzie Nuxt/Next.

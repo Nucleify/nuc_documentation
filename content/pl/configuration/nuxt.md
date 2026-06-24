@@ -164,7 +164,7 @@ vite: {
 },
 ```
 
-Ręczne chunki dla optymalnego code splitting i cache.
+Ręczne chunki dla optymalnego code splitting i cache. Stan: **Pinia** (Nuxt) z `pinia-plugin-persistedstate`; **Zustand** (Next.js) przez `nuc_stores`.
 
 ## SCSS
 
@@ -213,15 +213,13 @@ Użyj ikon z prefixem `i-prime`:
 
 Dostępne pod `http://localhost:6006` po odpaleniu Nuxta.
 
-## Laravel Sanctum
+## Supabase Auth
 
 ```typescript
-laravelSanctum: {
-  apiUrl: process.env.APP_URL,
-},
+// runtimeConfig.public — SUPABASE_URL, SUPABASE_KEY
 ```
 
-Autentykacja przez Laravel Sanctum.
+Autentykacja przez **Supabase Auth** (sesje JWT). Klient konfigurowany w `nuc_client` / `getSupabaseClient()`.
 
 ## Experimental
 

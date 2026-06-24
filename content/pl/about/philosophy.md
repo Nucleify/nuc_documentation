@@ -49,11 +49,8 @@ Backend i frontend należą razem. W Nucleify każdy moduł zawiera oba:
 
 ```txt
 modules/nuc_auth/
-├── app/                # Laravel (PHP)
-├── atomic/             # Nuxt (Vue/TypeScript)
-├── database/           # Migracje
-├── routes/             # Routy API
-├── tests/              # Testy Pest
+├── supabase/           # Migracje, seedery, handlery API
+├── atomic/             # Nuxt / Next UI
 └── vitests/            # Testy Vitest
 ```
 
@@ -61,10 +58,10 @@ Koniec z przełączaniem kontekstu między repozytoriami. Koniec z niejasnościa
 
 ### 3. Konwencja ponad konfiguracją
 
-Religijnie przestrzegamy konwencji Laravel i Nuxt. Dlaczego?
+Przestrzegamy konwencji Nuxt, Next i Supabase. Dlaczego?
 
 - **Zero zmęczenia decyzyjnego** – Skup się na budowaniu, nie konfigurowaniu
-- **Natychmiastowa znajomość** – Deweloperzy Laravel/Nuxt czują się jak w domu
+- **Natychmiastowa znajomość** – Deweloperzy full-stack czują się jak w domu
 - **Mądrość społeczności** – Sprawdzone wzorce zamiast wymyślania na nowo
 - **Przewidywalna struktura** – Znajdź dowolny plik w sekundy
 
@@ -103,14 +100,14 @@ Nucleify dostarcza **94+ punktów PageSpeed** od razu:
 - **Jawność ponad domniemanie** – Bez magii, bez niespodzianek
 - **Małe, skupione funkcje** – Jedna funkcja, jedno zadanie
 - **Znaczące nazwy** – `getUserById()` nie `get()`
-- **Typuj wszystko** – TypeScript + PHP type hints wszędzie
+- **Typuj wszystko** – TypeScript w całym stacku
 
 ### Filozofia testowania
 
 - **Testuj zachowanie, nie implementację** – Co robi, nie jak
 - **Wysokie pokrycie dla krytycznych ścieżek** – Auth, płatności, integralność danych
 - **Szybkie, niezawodne testy** – Wolne testy nie są uruchamiane
-- **Wiele warstw** – Pest (backend), Vitest (frontend)
+- **Vitest** – Testy frontendu i composables
 
 ### Filozofia dokumentacji
 

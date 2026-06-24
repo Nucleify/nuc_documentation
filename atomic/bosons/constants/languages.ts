@@ -1,4 +1,4 @@
-import type { DocLanguageInterface } from '../types'
+import type { DocLanguageInterface } from 'nucleify'
 
 export const DOC_LANGUAGES: DocLanguageInterface[] = [
   { code: 'en', name: 'English', isDefault: true },

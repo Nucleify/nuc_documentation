@@ -32,7 +32,7 @@ Components should only include functionality directly related to their UI behavi
 | Generic event handlers | Hardcoded configuration |
 
 **Business logic belongs in:**
-- Stores (Pinia)
+- Stores (Pinia / Zustand)
 - Composables
 - Services
 

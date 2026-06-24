@@ -1,21 +1,22 @@
 .documentation-toc {
-  position: fixed;
-  top: 76px;
-  right: 0;
-  width: 280px;
-  min-width: 280px;
-  height: calc(100vh - 76px);
-  background: $content-background;
-  backdrop-filter: blur(1em);
-  box-shadow: $box-shadow-none;
-  border: $border-none;
-  border-radius: $border-radius-none;
-  overflow-y: auto;
-  z-index: 1;
-  padding: 1.5rem 0;
+  display: none;
 
-  @media (width <= 1200px) {
-    display: none;
+  @media (min-width: $doc-layout-min) {
+    display: block;
+    position: fixed;
+    top: 76px;
+    right: 0;
+    width: 280px;
+    min-width: 280px;
+    height: calc(100vh - 76px);
+    background: $content-background;
+    backdrop-filter: blur(1em);
+    box-shadow: $box-shadow-none;
+    border: $border-none;
+    border-radius: $border-radius-none;
+    overflow-y: auto;
+    z-index: 1;
+    padding: 1.5rem 0;
   }
 
   .toc-container {

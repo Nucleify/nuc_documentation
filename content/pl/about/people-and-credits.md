@@ -42,13 +42,12 @@ Wszyscy kontrybutorzy są wymienieni na naszej stronie [GitHub Contributors](htt
 
 Nucleify jest zbudowany na bazie niesamowitych projektów open source:
 
-### Backend
+### Backend i dane
 
 | Projekt | Opis |
 |---------|------|
-| [Laravel](https://laravel.com) | Framework PHP dla aplikacji webowych |
-| [Laravel Sanctum](https://laravel.com/docs/sanctum) | Autentykacja API |
-| [Pest](https://pestphp.com) | Framework testowy PHP |
+| [Supabase](https://supabase.com) | PostgreSQL, Auth, Storage, Edge Functions |
+| [@supabase/supabase-js](https://github.com/supabase/supabase-js) | Klient JavaScript |
 
 ### Frontend
 
@@ -75,7 +74,7 @@ Nucleify jest zbudowany na bazie niesamowitych projektów open source:
 
 Projekty i zasoby, które zainspirowały Nucleify:
 
-- [Laravel Modules](https://nwidart.com/laravel-modules) – Architektura modułowa
+- [Moduły Nucleify](/pl/docs/core-concepts/modules) – Architektura modułowa
 - [Feature-Sliced Design](https://feature-sliced.design) – Architektura frontend
 - [Atomic Design](https://atomicdesign.bradfrost.com) – Hierarchia komponentów
 
@@ -83,7 +82,7 @@ Projekty i zasoby, które zainspirowały Nucleify:
 
 ## Specjalne podziękowania
 
-- Społeczności Laravel i Vue.js
+- Społeczności Supabase, Vue.js i React
 - Wszystkim, którzy zgłosili błędy lub zasugerowali funkcje
 - Maintainerom open source na całym świecie
 

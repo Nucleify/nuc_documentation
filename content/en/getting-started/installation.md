@@ -2,22 +2,20 @@
 
 ## Ready in Under 5 Minutes
 
-Nucleify is designed for instant productivity. With a single command, you'll have a fully configured development environment running - complete with Laravel backend, Nuxt frontend, and database.
+Nucleify is a **Nuxt 3** or **Next.js** frontend with a **Supabase** backend. One `make` command copies env config, installs dependencies, and starts the dev server.
 
 ---
 
 ## Prerequisites
 
-Before installing, ensure you have:
-
 | Requirement | Version | Check Command |
 |-------------|---------|---------------|
-| **Docker** | Latest | `docker --version` |
-| **Docker Compose** | Latest | `docker compose version` |
 | **Node.js** | 20.x+ | `node --version` |
 | **pnpm** | 9.x+ | `pnpm --version` |
-| **Composer** | 2.x | `composer --version` |
 | **Git** | Latest | `git --version` |
+| **Supabase CLI** | Latest (for DB) | `supabase --version` |
+
+You also need a Supabase project ([supabase.com](https://supabase.com)) or a local instance (`supabase start`).
 
 ---
 
@@ -30,117 +28,88 @@ git clone https://github.com/Nucleify/Nucleify.git
 cd Nucleify
 ```
 
-### 2. Run the Magic Command
+### 2. Choose Frontend & Run
+
+**Nuxt (default):**
 
 ```bash
-make
+make nuxt
 ```
 
-**That's it!** ☕ Grab a coffee while Nucleify:
+**Next.js:**
 
-- Copies environment configuration from `.config/`
-- Installs PHP dependencies via Composer
-- Installs Node.js dependencies via pnpm
-- Sets up Git hooks with Husky
-- Builds and starts Docker containers
-- Runs database migrations and seeders
+```bash
+make next
+```
+
+**Both** (install deps once, then pick manually):
+
+```bash
+make setup
+```
 
 ---
 
-## What make Command Does?
-
-Under the hood, the `make` command executes:
+## What `make` Does
 
 ```bash
-cp .config/.env.docker.example .env          # Environment config
-composer install                              # PHP dependencies
-pnpm install                                  # Node.js dependencies
-cd next && pnpm install && cd ..              # Next.js (if used)
-pnpm prepare:husky                           # Git hooks
-./vendor/bin/sail up --build -d              # Docker containers
-./vendor/bin/sail art migrate:fresh --seed   # Database
+cp .config/.env.nuxt.example .env   # or .env.next.example
+pnpm install
+pnpm prepare:husky
+pnpm nuxt                            # or pnpm next
 ```
+
+Configure Supabase keys in `.env` before using API features (see [Environment](/en/docs/configuration/environment)).
+
+---
+
+## Database Setup
+
+After Supabase is running and `.env` is filled:
+
+```bash
+bash .config/bash/apply-module-migrations.sh
+bash .config/bash/apply-module-sql.sh seeders
+```
+
+This merges SQL from all enabled modules under `modules/*/supabase/` and applies it to your database.
 
 ---
 
 ## Access Your Application
 
-Once setup completes, your application is ready:
-
 | Service | URL |
 |---------|-----|
-| **Frontend (Nuxt)** | `http://localhost:3000` |
-| **Backend (Laravel)** | `http://localhost` |
-| **Database (MySQL)** | `http://localhost:3306` |
-
---- 
-
-## Manual Installation (Alternative)
-
-If you prefer not to use Docker:
-
-### 1. Install Dependencies
-
-```bash
-composer install
-pnpm install
-```
-
-### 2. Configure Environment
-
-```bash
-cp .config/.env.docker.example .env
-php artisan key:generate
-```
-
-### 3. Database Setup
-
-Configure your database in `.env`, then:
-
-```bash
-php artisan migrate:fresh --seed
-```
-
-### 4. Start Development Servers
-
-```bash
-# Terminal 1: Laravel
-php artisan serve
-
-# Terminal 2: Nuxt
-pnpm run dev
-```
+| **Nuxt** | `http://localhost:3000` |
+| **Next** | `http://localhost:3001` (if port 3000 is taken) |
+| **API gateway** | `http://localhost:3000/api/test` |
+| **Supabase Studio** | Local: `http://localhost:54323` (with `supabase start`) |
 
 ---
 
 ## Troubleshooting
 
-### Docker Issues
+### Missing Supabase config
 
-If containers fail to start:
+Ensure `SUPABASE_URL`, `SUPABASE_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` are set in `.env`.
+
+### Port conflicts
+
+Stop other apps on 3000/3001 or set a custom port for Next/Nuxt.
+
+### Migration errors
+
+Re-run merge and apply:
 
 ```bash
-docker compose down -v
-make
+bash .config/bash/merge-module-supabase-sql.sh migrations
+bash .config/bash/apply-module-migrations.sh
 ```
-
-### Permission Issues (Linux/Mac)
-
-```bash
-sudo chown -R $USER:$USER .
-```
-
-### Port Conflicts
-
-If ports 80, 3000, or 3306 are in use, update `.config/docker-compose.yml` or stop conflicting services.
 
 ---
 
 ## Next Steps
 
-🎉 **Congratulations!** You're ready to build.
-
-1. **[Quick Start](/en/docs/getting-started/quick-start)** - Create your first component
-2. **[Modules Overview](/en/docs/modules/overview)** - Explore available modules
-3. **[Architecture](/en/docs/architecture/overview)** - Understand the system design
-
+1. **[Supabase](/en/docs/configuration/supabase)** — How the backend and API gateway work
+2. **[Quick Start](/en/docs/getting-started/quick-start)** — Create your first component
+3. **[Modules](/en/docs/core-concepts/modules)** — Module structure

@@ -32,7 +32,7 @@ Komponenty powinny zawierać tylko funkcjonalność bezpośrednio związaną z i
 | Generyczne handlery zdarzeń | Zakodowana na sztywno konfiguracja |
 
 **Logika biznesowa należy do:**
-- Store'ów (Pinia)
+- Store'ów (Pinia / Zustand)
 - Composables
 - Serwisów
 

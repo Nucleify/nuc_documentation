@@ -42,7 +42,6 @@ import {
   type DocHeadingInterface,
   getDocBasePath,
   loadDocContentClient,
-  loadDocContentServer,
   NucDocumentationPagination,
   NucDocumentationSidebar,
   NucDocumentationToc,
@@ -91,6 +90,9 @@ if (import.meta.server) {
   const pathInfo = parseDocPath(route.path)
   if (pathInfo) {
     try {
+      const { loadDocContentServer } = await import(
+        '../bosons/utils/load_doc_content.server'
+      )
       const doc = await loadDocContentServer(
         pathInfo.category,
         pathInfo.slug,

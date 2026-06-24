@@ -49,11 +49,8 @@ Backend and frontend belong together. In Nucleify, every module contains both:
 
 ```txt
 modules/nuc_auth/
-├── app/                # Laravel (PHP)
-├── atomic/             # Nuxt (Vue/TypeScript)
-├── database/           # Migrations
-├── routes/             # API routes
-├── tests/              # Pest tests
+├── supabase/           # Migrations, seeders, API handlers
+├── atomic/             # Nuxt / Next UI
 └── vitests/            # Vitest tests
 ```
 
@@ -61,10 +58,10 @@ No more context-switching between repositories. No more API contract confusion. 
 
 ### 3. Convention Over Configuration
 
-We follow Laravel and Nuxt conventions religiously. Why?
+We follow Nuxt, Next, and Supabase conventions. Why?
 
 - **Zero decision fatigue** – Focus on building, not configuring
-- **Instant familiarity** – Laravel/Nuxt developers feel at home
+- **Instant familiarity** – Modern full-stack developers feel at home
 - **Community wisdom** – Battle-tested patterns over reinvention
 - **Predictable structure** – Find any file in seconds
 
@@ -103,14 +100,14 @@ Great DX isn't a luxury – it's a multiplier:
 - **Explicit over implicit** – No magic, no surprises
 - **Small, focused functions** – One function, one job
 - **Meaningful names** – `getUserById()` not `get()`
-- **Type everything** – TypeScript + PHP type hints everywhere
+- **Type everything** – TypeScript w całym stacku
 
 ### Testing Philosophy
 
 - **Test behavior, not implementation** – What it does, not how
 - **High coverage for critical paths** – Auth, payments, data integrity
 - **Fast, reliable tests** – Slow tests don't get run
-- **Multiple layers** – Pest (backend), Vitest (frontend)
+- **Vitest** – Frontend and composable tests
 
 ### Documentation Philosophy
 
