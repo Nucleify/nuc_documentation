@@ -2,7 +2,7 @@
   <ad-select
     v-model="selectedPage"
     :options="pageOptions"
-    ad-type="main"
+    nui-type="main"
     option-label="title"
     option-value="value"
     class="nuc-documentation-navbar-nav"

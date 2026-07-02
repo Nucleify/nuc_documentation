@@ -58,7 +58,7 @@ export function NucDocumentationNavbarNav({
     <AdSelect
       value={selectedPage}
       options={pageOptions}
-      adType="main"
+      nuiType="main"
       optionLabel="title"
       optionValue="value"
       className="nuc-documentation-navbar-nav"
