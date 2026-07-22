@@ -1,17 +1,22 @@
 import {
   DEFAULT_LANG,
   type DocContent,
-  fetchDocMarkdownApi,
+  docMarkdownNotFoundError,
   markdownRawToDocContent,
 } from 'nucleify'
+
+import { getBundledMarkdown } from './markdown_bundle.generated'
 
 export async function loadDocContentClient(
   category: string,
   slug: string,
   lang: string = DEFAULT_LANG
 ): Promise<DocContent> {
-  const raw = await fetchDocMarkdownApi(lang, category, slug)
-  return markdownRawToDocContent(raw)
+  const bundled = getBundledMarkdown(lang, category, slug)
+  if (bundled === null) {
+    throw new Error(docMarkdownNotFoundError(lang, category, slug))
+  }
+  return markdownRawToDocContent(bundled)
 }
 
 export async function loadDocContent(

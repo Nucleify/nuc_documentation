@@ -75,7 +75,7 @@ function getLanguageUrl(lang: string): string {
   return `${basePath}/${pathInfo.category}/${pathInfo.slug}`
 }
 
-if (import.meta.client && isDocsRootPath(route.path)) {
+if (isDocsRootPath(route.path)) {
   const lang = extractLangFromPath(route.path)
   await navigateTo(getDefaultDocPath(lang), { replace: true })
 }
