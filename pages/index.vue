@@ -91,7 +91,7 @@ if (import.meta.server) {
   if (pathInfo) {
     try {
       const { loadDocContentServer } = await import(
-        '../bosons/utils/load_doc_content.server'
+        '../utils/load_doc_content.server'
       )
       const doc = await loadDocContentServer(
         pathInfo.category,

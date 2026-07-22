@@ -149,14 +149,14 @@ atomic/
 Najmniejsze elementy składowe — typy, stałe, narzędzia:
 
 ```typescript
-// atomic/bosons/types/api/interfaces.ts
+// types/api/interfaces.ts
 export interface ExampleApiResponse {
   id: number
   name: string
   created_at: string
 }
 
-// atomic/bosons/utils/api/requests.ts
+// utils/api.ts
 export async function getExamples(): Promise<ExampleApiResponse[]> {
   return await api.get('/api/examples')
 }
@@ -167,7 +167,7 @@ export async function getExamples(): Promise<ExampleApiResponse[]> {
 Komponenty pełnych stron Vue:
 
 ```html
-<!-- atomic/pages/General/index.vue -->
+<!-- pages/General/index.vue -->
 <template>
   <ExExampleDashboard />
 </template>
@@ -182,7 +182,7 @@ import { ExExampleDashboard } from '../../templates'
 Wielokrotnego użytku sekcje stron:
 
 ```html
-<!-- atomic/templates/Dashboard/General.vue -->
+<!-- components/Dashboard/General.vue -->
 <template>
   <section class="ex-example-dashboard">
     <slot />
@@ -244,8 +244,8 @@ vitests/
 
 - **Nazewnictwo**: Używaj unikalnego prefixu (`nuc_` jest zarezerwowany dla modułów core)
 - **Eksporty**: Eksportuj wszystko przez pliki `index.ts`
-- **Typy**: Definiuj wszystkie typy TypeScript w `atomic/bosons/types/`
-- **API**: Trzymaj logikę API w `atomic/bosons/utils/api/`
+- **Typy**: Definiuj wszystkie typy TypeScript w `types/`
+- **API**: Trzymaj logikę API w `utils/api.ts`
 - **Testowanie**: Preferuj Vitest dla UI i composables API
 - **SCSS**: Używaj `_index.scss` dla stylów specyficznych dla modułu
 - **Dokumentacja**: Dołącz `README.md` do każdego modułu

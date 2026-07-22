@@ -15,7 +15,7 @@ Module that provides Markdown-based documentation pages with SSR/prerendering su
 ## Usage
 
 1. Create `.md` files in `content/{category}/`
-2. Register pages in `DOC_CATEGORIES` constant (`atomic/bosons/constants/documentation.ts`)
+2. Register pages in `DOC_CATEGORIES` constant (`constants/documentation.ts`)
 
 ## Utils
 

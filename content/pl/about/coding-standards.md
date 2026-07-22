@@ -146,7 +146,7 @@ const emit = defineEmits<{
 
 - Każdy moduł powinien być **samowystarczalny**
 - Logika backendowa w `modules/<modul>/supabase/`
-- Frontend w `modules/<modul>/atomic/`
+- Frontend w `modules/<modul>/ (constants, types, utils, components)`
 - Globalne komponenty w `nuxt/atomic/`
 - Używaj `config.json` dla metadanych
 - Dokumentuj w `README.md`

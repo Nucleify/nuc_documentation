@@ -17,11 +17,11 @@ src/                             modules/
 ├── api/                         ├── nuc_auth/
 │   ├── auth-handler.ts          │   ├── supabase/api/handle.ts
 │   └── user-handler.ts          │   ├── supabase/migrations/
-├── db/                          │   ├── atomic/pages/
+├── db/                          │   ├── pages/
 │   └── users.sql                │   └── vitests/
 └── ui/                          └── nuc_entities/
     └── auth/                        ├── supabase/api/handle.ts
-                                     └── atomic/pages/
+                                     └── pages/
 ```
 
 ## Korzyści

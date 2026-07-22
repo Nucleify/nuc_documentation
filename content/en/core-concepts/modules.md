@@ -149,14 +149,14 @@ atomic/
 Smallest building blocks - types, constants, utilities:
 
 ```typescript
-// atomic/bosons/types/api/interfaces.ts
+// types/api/interfaces.ts
 export interface ExampleApiResponse {
   id: number
   name: string
   created_at: string
 }
 
-// atomic/bosons/utils/api/requests.ts
+// utils/api.ts
 export async function getExamples(): Promise<ExampleApiResponse[]> {
   return await api.get('/api/examples')
 }
@@ -167,7 +167,7 @@ export async function getExamples(): Promise<ExampleApiResponse[]> {
 Full-page Vue components:
 
 ```html
-<!-- atomic/pages/General/index.vue -->
+<!-- pages/General/index.vue -->
 <template>
   <ExExampleDashboard />
 </template>
@@ -182,7 +182,7 @@ import { ExExampleDashboard } from '../../templates'
 Reusable page sections:
 
 ```html
-<!-- atomic/templates/Dashboard/General.vue -->
+<!-- components/Dashboard/General.vue -->
 <template>
   <section class="ex-example-dashboard">
     <slot />
@@ -244,8 +244,8 @@ vitests/
 
 - **Naming**: Use unique prefix (`nuc_` is reserved for core modules)
 - **Exports**: Export everything through `index.ts` files
-- **Types**: Define all TypeScript types in `atomic/bosons/types/`
-- **API**: Keep API logic in `atomic/bosons/utils/api/`
+- **Types**: Define all TypeScript types in `types/`
+- **API**: Keep API logic in `utils/api.ts`
 - **Testing**: Prefer Vitest for UI and API composables
 - **SCSS**: Use `_index.scss` for module-specific styles
 - **Documentation**: Include `README.md` in each module

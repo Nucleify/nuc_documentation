@@ -75,9 +75,9 @@ overrides/
 
 ### Komponenty Vue
 
-Oryginał: `modules/nuc_auth/atomic/pages/Login/index.vue`
+Oryginał: `modules/nuc_auth/pages/Login/index.vue`
 
-Nadpisanie: `overrides/modules/nuc_auth/atomic/pages/Login/index.vue`
+Nadpisanie: `overrides/modules/nuc_auth/pages/Login/index.vue`
 
 ```html
 <template>

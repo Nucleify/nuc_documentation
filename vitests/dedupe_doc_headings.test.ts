@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   dedupeLeadingDocumentationHeadings,
   normalizeDocHeadingText,
-} from '../atomic/bosons/utils/dedupe_doc_headings'
+} from '../utils/dedupe_doc_headings'
 
 describe('normalizeDocHeadingText', () => {
   it('unifies punctuation variants', () => {
