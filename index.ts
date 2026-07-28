@@ -1,12 +1,7 @@
 export * from './nuc_documentation'
 
-export { default as NucDocumentationNavbarNav } from './components/navbar-nav/index.vue'
-export { default as NucDocumentationPagination } from './components/pagination/index.vue'
-export { default as NucDocumentationSidebar } from './components/sidebar/index.vue'
-export { default as NucDocumentationToc } from './components/toc/index.vue'
 export * from './constants/documentation'
 export * from './constants/languages'
-export { default as NucDocumentationPage } from './pages/index.vue'
 export * from './types/interfaces'
 export * from './utils/dedupe_doc_headings'
 export * from './utils/doc_content'

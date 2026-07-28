@@ -55,7 +55,7 @@ Nucleify is built on top of amazing open source projects:
 |---------|-------------|
 | [Nuxt](https://nuxt.com) | Vue.js framework |
 | [Vue.js](https://vuejs.org) | JavaScript framework |
-| [PrimeVue](https://primevue.org) | UI component library |
+| [nucleify-ui](https://www.npmjs.com/package/nucleify-ui) | Lit web component library (`nui-*`) |
 | [Vitest](https://vitest.dev) | Testing framework |
 
 ### Tooling

@@ -14,7 +14,7 @@ Feature-Sliced Design (FSD) organizuje kod według domeny biznesowej zamiast war
 ```txt
 # ❌ Warstwowa                   # ✅ Domenowa
 src/                             modules/
-├── api/                         ├── nuc_auth/
+├── api/                         ├── nuc_users/
 │   ├── auth-handler.ts          │   ├── supabase/api/handle.ts
 │   └── user-handler.ts          │   ├── supabase/migrations/
 ├── db/                          │   ├── pages/

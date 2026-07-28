@@ -107,34 +107,9 @@ app: {
 },
 ```
 
-## PrimeVue
+## UI (`nucleify-ui`)
 
-```typescript
-primevue: {
-  autoImport: true,
-  options: {
-    theme: {
-      preset: Lara,
-      options: {
-        darkModeSelector: '.p-dark',
-        cssLayer: {
-          name: 'primevue',
-          order: 'app-styles, primevue',
-        },
-      },
-    },
-    ripple: true,
-  },
-},
-```
-
-| Opcja | Opis |
-|-------|------|
-| `autoImport` | Auto-import komponentów PrimeVue |
-| `preset: Lara` | Preset motywu |
-| `darkModeSelector` | Klasa CSS dla dark mode |
-| `cssLayer` | Kolejność warstw CSS |
-| `ripple` | Włącz efekt ripple |
+Komponenty Lit (`nui-*`) rejestruje plugin `nuxt/plugins/nucleify-ui.client.ts` (`applyTheme`, style globalne). Custom elements `nui-` są ustawione w Vite (`isCustomElement`).
 
 ## Vite Build
 
@@ -150,7 +125,6 @@ vite: {
         manualChunks: {
           vue: ['vue', 'vue-router', '@unhead/vue'],
           pinia: ['pinia', 'pinia-plugin-persistedstate'],
-          primevue: ['primevue', '@primevue/forms', '@primeuix/themes'],
           chartjs: ['chart.js'],
           gsap: ['gsap'],
           marked: ['marked'],
@@ -159,7 +133,7 @@ vite: {
     },
   },
   optimizeDeps: {
-    include: ['vue', 'vue-router', 'primevue'],
+    include: ['vue', 'vue-router'],
   },
 },
 ```

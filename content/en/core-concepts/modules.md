@@ -6,7 +6,7 @@ Modules are the core organizational unit in Nucleify. They encapsulate related f
 
 | Type | Prefix | Example |
 |------|--------|---------|
-| Core modules | `nuc_` | `nuc_auth`, `nuc_entities` |
+| Core modules | `nuc_` | `nuc_users`, `nuc_entities` |
 | Custom modules | `your_prefix_` | `ex_payments`, `my_blog` |
 
 Core modules (`nuc_*`) are maintained by Nucleify. Custom modules should use a unique prefix to avoid conflicts.

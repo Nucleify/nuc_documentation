@@ -163,8 +163,8 @@ Merged output: `supabase/.temp/merged_migrations.sql`, `merged_seeders.sql`.
 
 ## Authentication
 
-- **Sign up / login:** `nuc_auth` uses `getSupabaseClient().auth` (email/password, session JWT).
-- **Profile:** After auth, `user_profiles` row is loaded (`getAndSetUser` in `nuc_auth`).
+- **Sign up / login:** `nuc_users` (`auth/`) uses `getSupabaseClient().auth` (email/password, session JWT).
+- **Profile:** After auth, `user_profiles` row is loaded (`getAndSetUser` in `nuc_users/auth`).
 - **API calls:** `apiRequest` sends cookies/headers as configured; server validates scope via Supabase auth uid in handlers.
 - Sessions are **Supabase Auth JWTs**.
 

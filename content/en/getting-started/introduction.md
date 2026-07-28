@@ -99,16 +99,16 @@ UI components organized into a hierarchical structure for maximum reusability. A
 
 ### Modular Architecture
 
-Nucleify ships with **40+ production-ready modules** organized by domain:
+Nucleify ships with production-ready modules organized by domain:
 
 | Category | Modules |
 |----------|---------|
 | **Core** | `nuc_modules`, `nuc_api`, `nuc_stores`, `nuc_globals` |
-| **Auth** | `nuc_auth`, `nuc_friendship`, `nuc_activity` |
-| **Data** | `nuc_entities`, `nuc_files`, `nuc_database`, `nuc_fields` |
-| **UI** | `nuc_charts`, `nuc_datatable`, `nuc_dialog`, `nuc_navigation` |
-| **Visual** | `nuc_animations`, `nuc_colors`, `nuc_screen_loader`, `nuc_screen_lights` |
-| **Layout** | `nuc_pages`, `nuc_sections`, `nuc_templates` |
+| **Auth** | `nuc_users`, `nuc_activity` |
+| **Data** | `nuc_entities` |
+| **UI** | `nuc_templates` (charts, dock, dialog, datatable, sections) |
+| **Visual** | `nuc_globals` (animations), `nuc_colors` |
+| **Layout** | `nuc_pages`, `nuc_templates` |
 
 Each module is self-contained, independently testable, and can be enabled/disabled as needed.
 
@@ -117,7 +117,7 @@ Each module is self-contained, independently testable, and can be enabled/disabl
 Each module encapsulates all related code within a single directory:
 
 ```txt
-modules/nuc_auth/
+modules/nuc_users/
 ├── atomic/                 # Vue/React components & composables
 ├── supabase/               # SQL migrations, seeders, API handlers
 │   ├── migrations/
@@ -157,7 +157,7 @@ Overrides are automatically merged at build time, allowing you to:
 | Layer | Technologies |
 |-------|-------------|
 | **Backend** | Supabase (PostgreSQL, Auth, Storage), module API gateway |
-| **Frontend** | Nuxt 3 / Next.js, Vue 3 / React, TypeScript, Pinia / Zustand, PrimeVue 4 |
+| **Frontend** | Nuxt 3 / Next.js, Vue 3 / React, TypeScript, Pinia / Zustand, nucleify-ui |
 | **Styling** | SCSS, GSAP, Chart.js |
 | **DevOps** | Supabase CLI, Vite, Husky, Biome, TSC, Stylelint |
 | **Testing** | Vitest |

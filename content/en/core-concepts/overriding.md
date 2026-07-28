@@ -25,7 +25,7 @@ overrides/
 │   ├── pages/
 │   └── ...
 └── modules/                 # Overrides for modules/ directory
-    └── nuc_auth/
+    └── nuc_users/
         ├── atomic/
         └── supabase/
 ```
@@ -41,7 +41,7 @@ The system automatically:
 ```txt
 overrides/
 └── modules/
-    └── nuc_auth/
+    └── nuc_users/
         ├── atomic/
         │   └── pages/
         │       └── Login/
@@ -75,9 +75,9 @@ overrides/
 
 ### Vue Components
 
-Original: `modules/nuc_auth/pages/Login/index.vue`
+Original: `modules/nuc_users/auth/pages/login.vue`
 
-Override: `overrides/modules/nuc_auth/pages/Login/index.vue`
+Override: `overrides/modules/nuc_users/auth/pages/login.vue`
 
 ```html
 <template>
@@ -113,9 +113,9 @@ Override: `overrides/nuxt/pages/dashboard.vue`
 
 ### API handlers
 
-Original: `modules/nuc_auth/supabase/api/handle.ts`
+Original: `modules/nuc_users/supabase/api/handle.ts`
 
-Override: `overrides/modules/nuc_auth/supabase/api/handle.ts`
+Override: `overrides/modules/nuc_users/supabase/api/handle.ts`
 
 ```typescript
 import { apiNotHandled } from 'nuc_api'

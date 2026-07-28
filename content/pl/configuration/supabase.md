@@ -162,8 +162,8 @@ Wynik merge: `supabase/.temp/merged_migrations.sql`, `merged_seeders.sql`.
 
 ## Uwierzytelnianie
 
-- **Rejestracja / logowanie:** `nuc_auth` używa `getSupabaseClient().auth` (email/hasło, sesja JWT).
-- **Profil:** Po auth ładowany jest wiersz `user_profiles` (`getAndSetUser` w `nuc_auth`).
+- **Rejestracja / logowanie:** `nuc_users` (`auth/`) używa `getSupabaseClient().auth` (email/hasło, sesja JWT).
+- **Profil:** Po auth ładowany jest wiersz `user_profiles` (`getAndSetUser` w `nuc_users/auth`).
 - **Wywołania API:** `apiRequest` wysyła cookies/nagłówki; serwer weryfikuje scope przez uid z Supabase Auth w handlerach.
 - Sesje to **JWT Supabase Auth**.
 

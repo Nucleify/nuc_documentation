@@ -43,7 +43,7 @@ Nucleify extends the original Atomic Design with dedicated modules that **are al
 | Module | Purpose |
 |--------|---------|
 | `nuc_templates` | Reusable templates for individual components (cards, forms, modals) |
-| `nuc_sections` | Page sections with layout logic, data handling, section-specific behavior |
+| `nuc_templates` | Page sections with layout logic, data handling, section-specific behavior |
 | `nuc_pages` | Full page components with API calls, store access, business rules |
 
 These modules were intentionally separated from `nuxt/atomic/` because they serve as integration points where UI meets application logic. By isolating business logic here, all other atomic components remain pure, and reusable.
@@ -81,7 +81,7 @@ Nucleify extends the original Atomic Design with an additional layer called **Bo
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                               Sections  (nuc_sections)                                 │
+│                               Sections  (nuc_templates)                                 │
 │                    Page sections with layout and data handling                         │
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
@@ -390,7 +390,7 @@ modules/nuc_templates/
 
 Sections are page-level building blocks with layout logic and data handling. They compose templates and organisms into meaningful page areas.
 
-**Location:** `modules/nuc_sections/`
+**Location:** `modules/nuc_templates/`
 
 ```html
 <template>
@@ -421,7 +421,7 @@ function handleAction() {
 **Folder structure:**
 
 ```txt
-modules/nuc_sections/
+modules/nuc_templates/
 ├── atomic/
 │   └── sections/
 │       ├── hero/

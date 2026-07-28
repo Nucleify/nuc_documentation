@@ -48,7 +48,7 @@ Wszystko w Nucleify jest modułem. Nie dlatego, że to modne, ale dlatego, że d
 Backend i frontend należą razem. W Nucleify każdy moduł zawiera oba:
 
 ```txt
-modules/nuc_auth/
+modules/nuc_users/
 ├── supabase/           # Migracje, seedery, handlery API
 ├── atomic/             # Nuxt / Next UI
 └── vitests/            # Testy Vitest
@@ -73,7 +73,7 @@ Nucleify dostarcza **94+ punktów PageSpeed** od razu:
 - Atomic Design umożliwia chirurgiczny code-splitting
 - Optymalizacja fontów przez `@nuxtjs/google-fonts`
 - Lazy-loading obrazów i optymalizacja formatów
-- Odroczone ładowanie treści z PrimeVue
+- Odroczone ładowanie treści przez `nui-deferred-content`
 - Buildy Vite z optymalnym chunkingiem
 
 **Wydajność nie jest dodatkiem. Jest wbudowana.**

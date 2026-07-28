@@ -40,8 +40,8 @@ modules/<nazwa_modulu>/
 
 | Typ | Konwencja | Przykład |
 |-----|-----------|----------|
-| Foldery modułów | `snake_case` | `nuc_auth`, `nuc_entities` |
-| Migracje SQL | Prefiks timestamp | `20260501000000_nuc_auth.sql` |
+| Foldery modułów | `snake_case` | `nuc_users`, `nuc_entities` |
+| Migracje SQL | Prefiks timestamp | `20260501000000_nuc_users.sql` |
 | Handlery API | `snake_case` | `handle.ts` w `supabase/api/` |
 | Routy API | `kebab-case` w URL | `/api/user-profile` |
 

@@ -6,7 +6,7 @@ Moduły są główną jednostką organizacyjną w Nucleify. Zamykają powiązan�
 
 | Typ | Prefix | Przykład |
 |-----|--------|----------|
-| Moduły core | `nuc_` | `nuc_auth`, `nuc_entities` |
+| Moduły core | `nuc_` | `nuc_users`, `nuc_entities` |
 | Moduły własne | `twoj_prefix_` | `ex_payments`, `my_blog` |
 
 Moduły core (`nuc_*`) są utrzymywane przez Nucleify. Moduły własne powinny używać unikalnego prefixu, aby uniknąć konfliktów.

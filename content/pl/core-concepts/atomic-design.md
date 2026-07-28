@@ -43,7 +43,7 @@ Nucleify rozszerza oryginalny Atomic Design o dedykowane moduły, które **mogą
 | Moduł | Przeznaczenie |
 |-------|---------------|
 | `nuc_templates` | Szablony wielokrotnego użytku dla pojedynczych komponentów (karty, formularze, modale) |
-| `nuc_sections` | Sekcje stron z logiką layoutu, obsługą danych, zachowaniem specyficznym dla sekcji |
+| `nuc_templates` | Sekcje stron z logiką layoutu, obsługą danych, zachowaniem specyficznym dla sekcji |
 | `nuc_pages` | Pełne komponenty stron z wywołaniami API, dostępem do store'ów, regułami biznesowymi |
 
 Te moduły zostały celowo oddzielone od `nuxt/atomic/`, ponieważ służą jako punkty integracji, gdzie UI spotyka się z logiką aplikacji. Izolując logikę biznesową tutaj, wszystkie pozostałe komponenty atomowe pozostają czyste i wielokrotnego użytku.
@@ -81,7 +81,7 @@ Nucleify rozszerza oryginalny Atomic Design o dodatkową warstwę zwaną **Boson
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                               Sections  (nuc_sections)                                 │
+│                               Sections  (nuc_templates)                                 │
 │                    Sekcje stron z logiką layoutu i obsługą danych                      │
 └────────────────────────────────────────────────────────────────────────────────────────┘
                                            ▼
@@ -390,7 +390,7 @@ modules/nuc_templates/
 
 Sections to bloki budulcowe na poziomie strony z logiką layoutu i obsługą danych. Komponują szablony i organizmy w znaczące obszary strony.
 
-**Lokalizacja:** `modules/nuc_sections/`
+**Lokalizacja:** `modules/nuc_templates/`
 
 ```html
 <template>
@@ -421,7 +421,7 @@ function handleAction() {
 **Struktura folderów:**
 
 ```txt
-modules/nuc_sections/
+modules/nuc_templates/
 ├── atomic/
 │   └── sections/
 │       ├── hero/

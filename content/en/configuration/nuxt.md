@@ -107,34 +107,9 @@ app: {
 },
 ```
 
-## PrimeVue
+## UI (`nucleify-ui`)
 
-```typescript
-primevue: {
-  autoImport: true,
-  options: {
-    theme: {
-      preset: Lara,
-      options: {
-        darkModeSelector: '.p-dark',
-        cssLayer: {
-          name: 'primevue',
-          order: 'app-styles, primevue',
-        },
-      },
-    },
-    ripple: true,
-  },
-},
-```
-
-| Option | Description |
-|--------|-------------|
-| `autoImport` | Auto-import PrimeVue components |
-| `preset: Lara` | Theme preset |
-| `darkModeSelector` | CSS class for dark mode |
-| `cssLayer` | CSS layer ordering |
-| `ripple` | Enable ripple effect |
+Lit web components (`nui-*`) are registered by `nuxt/plugins/nucleify-ui.client.ts` (`applyTheme`, global styles). Custom elements matching `nui-` are configured in Vite (`isCustomElement`).
 
 ## Vite Build
 
@@ -150,7 +125,6 @@ vite: {
         manualChunks: {
           vue: ['vue', 'vue-router', '@unhead/vue'],
           pinia: ['pinia', 'pinia-plugin-persistedstate'],
-          primevue: ['primevue', '@primevue/forms', '@primeuix/themes'],
           chartjs: ['chart.js'],
           gsap: ['gsap'],
           marked: ['marked'],
@@ -159,7 +133,7 @@ vite: {
     },
   },
   optimizeDeps: {
-    include: ['vue', 'vue-router', 'primevue'],
+    include: ['vue', 'vue-router'],
   },
 },
 ```
@@ -215,7 +189,7 @@ Use icons with `i-prime` prefix:
 
 Authentication uses **Supabase Auth** (JWT sessions). The client is configured via `nuc_client` / `getSupabaseClient()` using `runtimeConfig.public.supabaseUrl` and `supabaseKey`.
 
-Login and registration flows live in `nuc_auth`; the server API gateway uses `SUPABASE_SERVICE_ROLE_KEY` from private runtime config.
+Login and registration flows live in `nuc_users` (`auth/`); the server API gateway uses `SUPABASE_SERVICE_ROLE_KEY` from private runtime config.
 
 See [Supabase](/en/docs/configuration/supabase) for the full auth and API flow.
 
